@@ -31,11 +31,9 @@ public enum ErrorCode {
     AGE_INVALID(1106, "Your age must be at least {min}", HttpStatus.BAD_REQUEST),
     INVALID_PASSWORD(1107, "Password must be at least {min} characters", HttpStatus.BAD_REQUEST),
 
-
     // prompt code prompt : 120*
     PROMPT_STRUCTURE(1201, "Prompt structure must be not blank", HttpStatus.BAD_REQUEST),
     PROMPT_STRUCTURE_NOT_FOUND(1202, "Prompt structure not found", HttpStatus.BAD_REQUEST),
-
 
     // error code github : 130*
     GITHUB_LINK(1301, "Github link must be not blank", HttpStatus.BAD_REQUEST),
@@ -58,6 +56,21 @@ public enum ErrorCode {
     DATE_APPOINTMENT_NOT_SUITABLE(1019, "This smaller set date is now", HttpStatus.BAD_REQUEST),
     TIME_START_SUITABLE(1020, "This smaller set time is now", HttpStatus.BAD_REQUEST),
     CALENDAR_NOT_EXISTED(1021, "Calendar not existed", HttpStatus.NOT_FOUND),
+
+    // error code course: 1700**
+    COURSE_NOT_EXISTED(170001, "Course not existed", HttpStatus.NOT_FOUND),
+    COURSE_NAME_INVALID(170002, "Course name must be not blank", HttpStatus.NOT_FOUND),
+    COURSE_PRICE_INVALID(170003, "Course price must be not blank", HttpStatus.NOT_FOUND),
+    COURSE_THUMBNAIL_URL_INVALID(170004, "Course thumbnail url must be not blank", HttpStatus.NOT_FOUND),
+    COURSE_POINT_INVALID(170005, "Course point must be not blank", HttpStatus.NOT_FOUND),
+    COURSE_DESCRIPTION_INVALID(170006, "Course description must be not blank", HttpStatus.NOT_FOUND),
+    COURSE_UNIT_INVALID(170007, "Course currency unit must be not blank", HttpStatus.NOT_FOUND),
+    COURSE_IS_ACTIVE_INVALID(170008, "Course is active must be not blank", HttpStatus.NOT_FOUND),
+    COURSE_IS_PUBLIC_INVALID(170009, "Course is public must be not blank", HttpStatus.NOT_FOUND),
+    COURSE_CURRENCY_UNIT_INVALID(170010, "The course currency must be USD or VND", HttpStatus.NOT_FOUND),
+    COURSE_IS_ACTIVE_INVALID_TYPE(170011, "The course is active must be false or true", HttpStatus.NOT_FOUND),
+    COURSE_IS_PUBLIC_INVALID_TYPE(170012, "The course is public must be false or true", HttpStatus.NOT_FOUND),
+
     ;
     Integer code;
     String message;
