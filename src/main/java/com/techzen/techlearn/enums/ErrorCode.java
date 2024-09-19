@@ -71,6 +71,20 @@ public enum ErrorCode {
     COURSE_IS_ACTIVE_INVALID_TYPE(170011, "The course is active must be false or true", HttpStatus.NOT_FOUND),
     COURSE_IS_PUBLIC_INVALID_TYPE(170012, "The course is public must be false or true", HttpStatus.NOT_FOUND),
 
+    // error code lesson: 1800**
+    LESSON_NOT_EXISTED(180001, "Lesson not existed", HttpStatus.NOT_FOUND),
+    LESSON_TITLE_INVALID(180002, "Lesson title must be not blank", HttpStatus.NOT_FOUND),
+    LESSON_TYPE_INVALID(180003, "Lesson type must be not blank", HttpStatus.NOT_FOUND),
+    LESSON_ORDER_INVALID(180004, "Lesson order url must be not blank", HttpStatus.NOT_FOUND),
+    LESSON_CONTENT_INVALID(180005, "Lesson content must be not blank", HttpStatus.NOT_FOUND),
+    LESSON_VIDEO_URL_INVALID(180006, "Lesson video url must be not blank", HttpStatus.NOT_FOUND),
+    COURSE_CONTENT_REFER_INVALID(180007, "Lesson content refer unit must be not blank", HttpStatus.NOT_FOUND),
+    COURSE_TYPE_INVALID_TYPE(180008, "The Lesson type must be READINGS, LECTURES or EXERCISES", HttpStatus.NOT_FOUND),
+    CHAPTER_ID_INVALID(180009, "Chapter id must be not blank", HttpStatus.NOT_FOUND),
+
+    // error code 1900**
+    CHAPTER_NOT_FOUND(190001, "Chapter not found", HttpStatus.NOT_FOUND),
+
     ;
     Integer code;
     String message;

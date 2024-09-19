@@ -14,7 +14,7 @@ import org.hibernate.annotations.Where;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Where(clause = "is_deleted = false")
-@Table(name = "tbl_lesstion")
+@Table(name = "tbl_lesson")
 public class LessonEntity extends BaseEntity {
 
     @Id
@@ -28,8 +28,8 @@ public class LessonEntity extends BaseEntity {
     @Enumerated(EnumType.STRING)
     TypeLesson type;
 
-    @Column(name = "order")
-    Integer order;
+    @Column(name = "lesson_order")
+    Integer lessonOrder;
 
     @Column(name = "content", columnDefinition = "NTEXT")
     String content;
