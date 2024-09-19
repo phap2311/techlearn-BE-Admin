@@ -24,7 +24,7 @@ public class ChapterEntity extends BaseEntity {
     String name;
 
     @Column(name = "chapter_order")
-    Integer chapter_order;
+    Integer chapterOrder;
 
     @Column(name = "is_public")
     Boolean isPublic;
