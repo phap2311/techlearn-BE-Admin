@@ -35,5 +35,4 @@ public class ChapterEntity extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id")
     private CourseEntity course;
-
 }
