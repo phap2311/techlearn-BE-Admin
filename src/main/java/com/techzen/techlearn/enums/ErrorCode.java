@@ -51,8 +51,10 @@ public enum ErrorCode {
 
     // error code calendar : 160*
     TIME_NOT_SUITABLE(1016, "time start must time end equals ten minutes", HttpStatus.NOT_FOUND),
-    TEACHER_CALENDAR_DATE_APPOINTMENT_EXISTED(1017, "teacher or calendar or date appointment  existed", HttpStatus.BAD_REQUEST),
-    NAME_TEACHER_OR_TECHNICAL_AND_CURRENT_DATE_NOT_EXISTED(1018, "technical or teacher or current date not existed", HttpStatus.BAD_REQUEST),
+    TEACHER_CALENDAR_DATE_APPOINTMENT_EXISTED(1017, "teacher or calendar or date appointment  existed",
+            HttpStatus.BAD_REQUEST),
+    NAME_TEACHER_OR_TECHNICAL_AND_CURRENT_DATE_NOT_EXISTED(1018, "technical or teacher or current date not existed",
+            HttpStatus.BAD_REQUEST),
     DATE_APPOINTMENT_NOT_SUITABLE(1019, "This smaller set date is now", HttpStatus.BAD_REQUEST),
     TIME_START_SUITABLE(1020, "This smaller set time is now", HttpStatus.BAD_REQUEST),
     CALENDAR_NOT_EXISTED(1021, "Calendar not existed", HttpStatus.NOT_FOUND),
@@ -71,7 +73,17 @@ public enum ErrorCode {
     COURSE_IS_ACTIVE_INVALID_TYPE(170011, "The course is active must be false or true", HttpStatus.NOT_FOUND),
     COURSE_IS_PUBLIC_INVALID_TYPE(170012, "The course is public must be false or true", HttpStatus.NOT_FOUND),
 
+    // Error code for chapter: 1800**
+    CHAPTER_NOT_EXISTED(180001, "Chapter not existed", HttpStatus.NOT_FOUND),
+    CHAPTER_NAME_INVALID(180002, "Chapter name must be not blank", HttpStatus.BAD_REQUEST),
+    CHAPTER_ORDER_INVALID(180003, "Chapter chapter_order must be a valid number", HttpStatus.BAD_REQUEST),
+    CHAPTER_IS_PUBLIC_INVALID(180004, "Chapter public status must be not blank", HttpStatus.BAD_REQUEST),
+    CHAPTER_IS_DELETED_INVALID(180005, "Chapter deletion status must be false or true", HttpStatus.BAD_REQUEST),
+    CHAPTER_COURSE_ID_INVALID(180006, "Chapter must be associated with a valid course", HttpStatus.BAD_REQUEST),
+    CHAPTER_IS_PUBLIC_INVALID_TYPE(180007, "Chapter public status must be false or true", HttpStatus.BAD_REQUEST);
+
     ;
+
     Integer code;
     String message;
     HttpStatusCode statusCode;

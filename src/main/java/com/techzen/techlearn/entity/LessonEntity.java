@@ -14,7 +14,7 @@ import org.hibernate.annotations.Where;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Where(clause = "is_deleted = false")
-@Table(name = "tbl_lesstion")
+@Table(name = "tbl_lesson")
 public class LessonEntity extends BaseEntity {
 
     @Id
