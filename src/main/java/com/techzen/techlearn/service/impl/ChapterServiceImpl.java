@@ -4,10 +4,13 @@ import com.techzen.techlearn.dto.request.ChapterRequestDTO;
 import com.techzen.techlearn.dto.response.ChapterResponseDTO;
 import com.techzen.techlearn.dto.response.PageResponse;
 import com.techzen.techlearn.entity.ChapterEntity;
+import com.techzen.techlearn.entity.CourseEntity;
+import com.techzen.techlearn.enums.ErrorCode;
+import com.techzen.techlearn.exception.ApiException;
 import com.techzen.techlearn.mapper.ChapterMapper;
 import com.techzen.techlearn.repository.ChapterRepository;
+import com.techzen.techlearn.repository.CourseRepository;
 import com.techzen.techlearn.service.ChapterService;
-import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -16,6 +19,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -24,17 +28,28 @@ public class ChapterServiceImpl implements ChapterService {
 
     ChapterRepository chapterRepository;
     ChapterMapper chapterMapper;
+    CourseRepository courseRepository;
 
     @Override
     public ChapterResponseDTO getChapterById(Long id) {
         ChapterEntity chapterEntity = chapterRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Chapter not found"));
+                .orElseThrow(() -> new ApiException(ErrorCode.CHAPTER_NOT_EXISTED));
         return chapterMapper.toChapterResponseDTO(chapterEntity);
     }
 
     @Override
     public ChapterResponseDTO addChapter(ChapterRequestDTO request) {
-        ChapterEntity chapterEntity = chapterMapper.toChapterEntity(request);
+        var chapterEntity = chapterMapper.toChapterEntity(request);
+
+        Optional<CourseEntity> courseOpt = courseRepository.findById(request.getCourseId());
+
+        if (courseOpt.isEmpty()) {
+            throw new ApiException(ErrorCode.COURSE_NOT_EXISTED);
+        }
+
+        CourseEntity curCourse = courseOpt.get();
+        chapterEntity.setCourse(curCourse);
+        chapterEntity.setIsDeleted(false);
         ChapterEntity savedChapter = chapterRepository.save(chapterEntity);
         return chapterMapper.toChapterResponseDTO(savedChapter);
     }
@@ -42,31 +57,30 @@ public class ChapterServiceImpl implements ChapterService {
     @Override
     public ChapterResponseDTO updateChapter(Long id, ChapterRequestDTO request) {
         ChapterEntity chapterEntity = chapterRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Chapter not found"));
+                .orElseThrow(() -> new ApiException(ErrorCode.CHAPTER_NOT_EXISTED));
         chapterMapper.updateChapterEntityFromDTO(request, chapterEntity);
         ChapterEntity updatedChapter = chapterRepository.save(chapterEntity);
         return chapterMapper.toChapterResponseDTO(updatedChapter);
     }
 
     @Override
-    @Transactional
     public void deleteChapter(Long id) {
         ChapterEntity chapterEntity = chapterRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Chapter not found"));
-        chapterEntity.setIsDeleted(true); // Update the isDeleted flag instead of removing the entity
+                .orElseThrow(() -> new ApiException(ErrorCode.CHAPTER_NOT_EXISTED));
+        chapterEntity.setIsDeleted(true);
         chapterRepository.save(chapterEntity);
     }
 
     @Override
     public PageResponse<?> getAllChapters(int page, int pageSize) {
         Page<ChapterEntity> chapters = chapterRepository.findAll(PageRequest.of(page > 0 ? page - 1 : 0, pageSize));
-        List<ChapterResponseDTO> list = chapters.map(chapterMapper::toChapterResponseDTO).toList();
+        List<ChapterResponseDTO> listChapter = chapters.map(chapterMapper::toChapterResponseDTO).toList();
 
         return PageResponse.builder()
                 .page(page)
                 .pageSize(pageSize)
                 .totalPage(chapters.getTotalPages())
-                .items(list)
+                .items(listChapter)
                 .build();
     }
 }

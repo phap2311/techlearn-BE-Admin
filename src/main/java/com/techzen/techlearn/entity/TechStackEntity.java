@@ -5,6 +5,9 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.Where;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -13,8 +16,8 @@ import org.hibernate.annotations.Where;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Where(clause = "is_deleted = false")
-@Table(name = "tbl_chapter")
-public class ChapterEntity extends BaseEntity {
+@Table(name = "tbl_tech_stack")
+public class TechStackEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,16 +26,12 @@ public class ChapterEntity extends BaseEntity {
     @Column(name = "name")
     String name;
 
-    @Column(name = "chapter_order")
-    Integer chapter_order;
-
-    @Column(name = "is_public")
-    Boolean isPublic;
-
     @Column(name = "is_deleted")
     private Boolean isDeleted;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "course_id")
-    private CourseEntity course;
+    @ManyToMany
+    @JoinTable(name = "tbl_course_tech_stack",
+            joinColumns = @JoinColumn(name = "id_tech_stack"),
+    inverseJoinColumns = @JoinColumn(name = "is_course"))
+    List<CourseEntity> courses = new ArrayList<>();
 }
