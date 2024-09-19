@@ -73,7 +73,19 @@ public class ChapterServiceImpl implements ChapterService {
 
     @Override
     public PageResponse<?> getAllChapters(int page, int pageSize) {
-        Page<ChapterEntity> chapters = chapterRepository.findAll(PageRequest.of(page > 0 ? page - 1 : 0, pageSize));
+
+        List<Long> courseIds = getCurrentCourseIds();
+
+        if (courseIds.isEmpty()) {
+            return PageResponse.builder()
+                    .page(page)
+                    .pageSize(pageSize)
+                    .totalPage(0)
+                    .items(List.of())
+                    .build();
+        }
+
+        Page<ChapterEntity> chapters = chapterRepository.findByCourseIdIn(courseIds, PageRequest.of(page > 0 ? page - 1 : 0, pageSize));
         List<ChapterResponseDTO> listChapter = chapters.map(chapterMapper::toChapterResponseDTO).toList();
 
         return PageResponse.builder()
@@ -82,5 +94,14 @@ public class ChapterServiceImpl implements ChapterService {
                 .totalPage(chapters.getTotalPages())
                 .items(listChapter)
                 .build();
+    }
+
+
+    private List<Long> getCurrentCourseIds() {
+        List<CourseEntity> activeCourses = courseRepository.findAllActiveCourses();
+        return activeCourses.stream()
+                .map(CourseEntity::getId)
+                .sorted()
+                .toList();
     }
 }
