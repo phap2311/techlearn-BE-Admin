@@ -28,8 +28,8 @@ public class LessonEntity extends BaseEntity {
     @Enumerated(EnumType.STRING)
     TypeLesson type;
 
-    @Column(name = "chapter_order")
-    Integer chapter_order;
+    @Column(name = "order")
+    Integer order;
 
     @Column(name = "content", columnDefinition = "NTEXT")
     String content;
