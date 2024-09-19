@@ -10,14 +10,12 @@ import org.mapstruct.MappingTarget;
 @Mapper(componentModel = "spring")
 public interface ChapterMapper {
 
-
     @Mapping(source = "courseId", target = "course.id")
     ChapterEntity toChapterEntity(ChapterRequestDTO chapterRequestDTO);
-
 
     @Mapping(source = "course.id", target = "courseId")
     ChapterResponseDTO toChapterResponseDTO(ChapterEntity chapterEntity);
 
-    @Mapping(source = "courseId", target = "course.id")
-    void updateChapterEntityFromDTO(ChapterRequestDTO chapterRequestDTO, @MappingTarget ChapterEntity chapterEntity);
+/*    @Mapping(source = "courseId", target = "course.id")
+    void updateChapterEntityFromDTO(ChapterRequestDTO chapterRequestDTO, @MappingTarget ChapterEntity chapterEntity);*/
 }

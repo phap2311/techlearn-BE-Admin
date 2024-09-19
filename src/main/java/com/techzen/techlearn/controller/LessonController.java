@@ -1,8 +1,7 @@
 package com.techzen.techlearn.controller;
 
-import com.techzen.techlearn.dto.request.LessonOrderDTO;
+import com.techzen.techlearn.dto.request.OrderDTO;
 import com.techzen.techlearn.dto.request.LessonRequestDTO;
-import com.techzen.techlearn.dto.request.UserRequestDTO;
 import com.techzen.techlearn.service.LessonService;
 import com.techzen.techlearn.util.JsonResponse;
 import jakarta.validation.Valid;
@@ -51,7 +50,7 @@ public class LessonController {
     }
 
     @PatchMapping("/update-order")
-    public ResponseEntity<?> updateLessonOrder(@RequestBody List<LessonOrderDTO> lessonOrderList) {
+    public ResponseEntity<?> updateLessonOrder(@RequestBody List<OrderDTO> lessonOrderList) {
         lessonService.updateOrder(lessonOrderList);
         return ResponseEntity.ok().build();
     }

@@ -1,6 +1,6 @@
 package com.techzen.techlearn.service;
 
-import com.techzen.techlearn.dto.request.LessonOrderDTO;
+import com.techzen.techlearn.dto.request.OrderDTO;
 import com.techzen.techlearn.dto.request.LessonRequestDTO;
 import com.techzen.techlearn.dto.response.LessonResponseDTO;
 import com.techzen.techlearn.dto.response.PageResponse;
@@ -20,5 +20,5 @@ public interface LessonService {
 
     void deleteLesson(Long id);
 
-    void updateOrder(List<LessonOrderDTO> lessonOrderList);
+    void updateOrder(List<OrderDTO> lessonOrderList);
 }

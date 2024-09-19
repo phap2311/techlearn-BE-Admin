@@ -1,6 +1,6 @@
 package com.techzen.techlearn.service.impl;
 
-import com.techzen.techlearn.dto.request.LessonOrderDTO;
+import com.techzen.techlearn.dto.request.OrderDTO;
 import com.techzen.techlearn.dto.request.LessonRequestDTO;
 import com.techzen.techlearn.dto.response.LessonResponseDTO;
 import com.techzen.techlearn.dto.response.PageResponse;
@@ -22,7 +22,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -64,18 +63,15 @@ public class LessonServiceImpl implements LessonService {
                 .orElseThrow(() -> new ApiException(ErrorCode.CHAPTER_NOT_FOUND));
         lesson.setIsDeleted(false);
         lesson.setChapter(chapter);
-        lessonRepository.save(lesson);
-        return lessonMapper.toLessonResponseDTO(lesson);
+        return lessonMapper.toLessonResponseDTO(lessonRepository.save(lesson));
     }
 
     @Override
     public LessonResponseDTO updateLesson(Long id, LessonRequestDTO request) {
-        lessonRepository.findById(id).orElseThrow(() -> new ApiException(ErrorCode.LESSON_NOT_EXISTED));
+        var lesson = lessonRepository.findById(id).orElseThrow(() ->
+                new ApiException(ErrorCode.LESSON_NOT_EXISTED));
         var chapter = chapterRepository.findById(Long.parseLong(request.getChapterId()))
                 .orElseThrow(() -> new ApiException(ErrorCode.CHAPTER_NOT_FOUND));
-        var lesson = lessonMapper.toLessonEntity(request);
-        lesson.setId(id);
-        lesson.setIsDeleted(false);
         lesson.setChapter(chapter);
         return lessonMapper.toLessonResponseDTO(lessonRepository.save(lesson));
     }
@@ -88,11 +84,11 @@ public class LessonServiceImpl implements LessonService {
     }
 
     @Override
-    public void updateOrder(List<LessonOrderDTO> lessonOrderList) {
+    public void updateOrder(List<OrderDTO> lessonOrderList) {
         List<LessonEntity> lessonsToUpdate = lessonOrderList.stream()
                 .map(dto -> lessonRepository.findById(Long.parseLong(dto.getId()))
                         .map(lesson -> {
-                            lesson.setLessonOrder(Integer.parseInt(dto.getLessonOrder()));
+                            lesson.setLessonOrder(Integer.parseInt(dto.getOrder()));
                             return lesson;
                         })
                         .orElseThrow(() -> new ApiException(ErrorCode.LESSON_NOT_EXISTED)))

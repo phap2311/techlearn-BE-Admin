@@ -10,7 +10,7 @@ import lombok.experimental.FieldDefaults;
 @Setter
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class LessonOrderDTO {
+public class OrderDTO {
     String id;
-    String lessonOrder;
+    String order;
 }

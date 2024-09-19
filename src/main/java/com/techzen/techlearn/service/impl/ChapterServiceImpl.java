@@ -1,10 +1,10 @@
 package com.techzen.techlearn.service.impl;
 
 import com.techzen.techlearn.dto.request.ChapterRequestDTO;
+import com.techzen.techlearn.dto.request.OrderDTO;
 import com.techzen.techlearn.dto.response.ChapterResponseDTO;
 import com.techzen.techlearn.dto.response.PageResponse;
 import com.techzen.techlearn.entity.ChapterEntity;
-import com.techzen.techlearn.entity.CourseEntity;
 import com.techzen.techlearn.enums.ErrorCode;
 import com.techzen.techlearn.exception.ApiException;
 import com.techzen.techlearn.mapper.ChapterMapper;
@@ -16,10 +16,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -40,27 +42,23 @@ public class ChapterServiceImpl implements ChapterService {
     @Override
     public ChapterResponseDTO addChapter(ChapterRequestDTO request) {
         var chapterEntity = chapterMapper.toChapterEntity(request);
-
-        Optional<CourseEntity> courseOpt = courseRepository.findById(request.getCourseId());
-
-        if (courseOpt.isEmpty()) {
-            throw new ApiException(ErrorCode.COURSE_NOT_EXISTED);
-        }
-
-        CourseEntity curCourse = courseOpt.get();
-        chapterEntity.setCourse(curCourse);
+        var course = courseRepository.findById(Long.parseLong(request.getCourseId()))
+                .orElseThrow(() -> new ApiException(ErrorCode.COURSE_NOT_EXISTED));
+        chapterEntity.setCourse(course);
         chapterEntity.setIsDeleted(false);
-        ChapterEntity savedChapter = chapterRepository.save(chapterEntity);
-        return chapterMapper.toChapterResponseDTO(savedChapter);
+        return chapterMapper.toChapterResponseDTO(chapterRepository.save(chapterEntity));
     }
 
     @Override
     public ChapterResponseDTO updateChapter(Long id, ChapterRequestDTO request) {
-        ChapterEntity chapterEntity = chapterRepository.findById(id)
+        var chapterEntity = chapterRepository.findById(id)
                 .orElseThrow(() -> new ApiException(ErrorCode.CHAPTER_NOT_EXISTED));
-        chapterMapper.updateChapterEntityFromDTO(request, chapterEntity);
-        ChapterEntity updatedChapter = chapterRepository.save(chapterEntity);
-        return chapterMapper.toChapterResponseDTO(updatedChapter);
+        var course = courseRepository.findById(Long.parseLong(request.getCourseId()))
+                .orElseThrow(() -> new ApiException(ErrorCode.COURSE_NOT_EXISTED));
+        //chapterMapper.updateChapterEntityFromDTO(request, chapterEntity);
+        chapterEntity.setCourse(course);
+        //chapterEntity.setIsDeleted(false);
+        return chapterMapper.toChapterResponseDTO(chapterRepository.save(chapterEntity));
     }
 
     @Override
@@ -72,36 +70,30 @@ public class ChapterServiceImpl implements ChapterService {
     }
 
     @Override
-    public PageResponse<?> getAllChapters(int page, int pageSize) {
-
-        List<Long> courseIds = getCurrentCourseIds();
-
-        if (courseIds.isEmpty()) {
-            return PageResponse.builder()
-                    .page(page)
-                    .pageSize(pageSize)
-                    .totalPage(0)
-                    .items(List.of())
-                    .build();
-        }
-
-        Page<ChapterEntity> chapters = chapterRepository.findByCourseIdIn(courseIds, PageRequest.of(page > 0 ? page - 1 : 0, pageSize));
-        List<ChapterResponseDTO> listChapter = chapters.map(chapterMapper::toChapterResponseDTO).toList();
-
+    public PageResponse<?> getAllChapters(int page, int pageSize, Long id) {
+        Pageable pageable = PageRequest.of(page > 0 ? page - 1 : 0, pageSize,
+                Sort.by("chapterOrder"));
+        Page<ChapterEntity> chapter = chapterRepository.findAllByCourseId(id, pageable);
+        List<ChapterResponseDTO> list = chapter.map(chapterMapper::toChapterResponseDTO)
+                .stream().collect(Collectors.toList());
         return PageResponse.builder()
                 .page(page)
                 .pageSize(pageSize)
-                .totalPage(chapters.getTotalPages())
-                .items(listChapter)
+                .totalPage(chapter.getTotalPages())
+                .items(list)
                 .build();
     }
 
-
-    private List<Long> getCurrentCourseIds() {
-        List<CourseEntity> activeCourses = courseRepository.findAllActiveCourses();
-        return activeCourses.stream()
-                .map(CourseEntity::getId)
-                .sorted()
-                .toList();
+    @Override
+    public void updateOrder(List<OrderDTO> orderDTOS) {
+        List<ChapterEntity> lessonsToUpdate = orderDTOS.stream()
+                .map(dto -> chapterRepository.findById(Long.parseLong(dto.getId()))
+                        .map(lesson -> {
+                            lesson.setChapterOrder(Integer.parseInt(dto.getOrder()));
+                            return lesson;
+                        })
+                        .orElseThrow(() -> new ApiException(ErrorCode.LESSON_NOT_EXISTED)))
+                .collect(Collectors.toList());
+        chapterRepository.saveAll(lessonsToUpdate);
     }
 }

@@ -10,10 +10,9 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ChapterResponseDTO {
-
     Long id;
     String name;
-    Integer chapter_order;
+    Integer chapterOrder;
     Boolean isPublic;
     Long courseId;
 }

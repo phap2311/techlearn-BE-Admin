@@ -6,6 +6,7 @@ import com.techzen.techlearn.entity.LessonEntity;
 import com.techzen.techlearn.repository.ChapterRepository;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring", uses = ChapterRepository.class)
 public interface LessonMapper {
@@ -13,4 +14,7 @@ public interface LessonMapper {
     LessonResponseDTO toLessonResponseDTO(LessonEntity lesson);
 
     LessonEntity toLessonEntity(LessonRequestDTO lesson);
+
+/*    @Mapping(source = "chapterId", target = "chapter.id")
+    void updateLessonEntityFromDTO(LessonRequestDTO lessonRequestDTO, @MappingTarget LessonEntity lessonEntity);*/
 }
