@@ -8,6 +8,7 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Getter
 @Setter
@@ -23,4 +24,5 @@ public class CourseResponseDTO {
     CurrencyUnit currencyUnit;
     Boolean isActive;
     Boolean isPublic;
+    List<String> techStack;
 }
