@@ -80,10 +80,21 @@ public enum ErrorCode {
     CHAPTER_IS_PUBLIC_INVALID(180004, "Chapter public status must be not blank", HttpStatus.BAD_REQUEST),
     CHAPTER_IS_DELETED_INVALID(180005, "Chapter deletion status must be false or true", HttpStatus.BAD_REQUEST),
     CHAPTER_COURSE_ID_INVALID(180006, "Chapter must be associated with a valid course", HttpStatus.BAD_REQUEST),
-    CHAPTER_IS_PUBLIC_INVALID_TYPE(180007, "Chapter public status must be false or true", HttpStatus.BAD_REQUEST);
+    CHAPTER_IS_PUBLIC_INVALID_TYPE(180007, "Chapter public status must be false or true", HttpStatus.BAD_REQUEST),
+    CHAPTER_NOT_FOUND(180008, "Chapter not found", HttpStatus.NOT_FOUND),
+
+    // error code lesson: 1900**
+    LESSON_NOT_EXISTED(190001, "Lesson not existed", HttpStatus.NOT_FOUND),
+    LESSON_TITLE_INVALID(190002, "Lesson title must be not blank", HttpStatus.NOT_FOUND),
+    LESSON_TYPE_INVALID(190003, "Lesson type must be not blank", HttpStatus.NOT_FOUND),
+    LESSON_ORDER_INVALID(190004, "Lesson order url must be not blank", HttpStatus.NOT_FOUND),
+    LESSON_CONTENT_INVALID(190005, "Lesson content must be not blank", HttpStatus.NOT_FOUND),
+    LESSON_VIDEO_URL_INVALID(190006, "Lesson video url must be not blank", HttpStatus.NOT_FOUND),
+    COURSE_CONTENT_REFER_INVALID(190007, "Lesson content refer unit must be not blank", HttpStatus.NOT_FOUND),
+    COURSE_TYPE_INVALID_TYPE(190008, "The Lesson type must be READINGS, LECTURES or EXERCISES", HttpStatus.NOT_FOUND),
+    CHAPTER_ID_INVALID(190009, "Chapter id must be not blank", HttpStatus.NOT_FOUND),
 
     ;
-
     Integer code;
     String message;
     HttpStatusCode statusCode;

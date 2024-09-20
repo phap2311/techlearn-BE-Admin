@@ -25,7 +25,7 @@ CREATE TABLE tbl_chapter
     modified_date datetime NULL,
     modified_by   VARCHAR(255) NULL,
     name          VARCHAR(255) NULL,
-    `order`         INT NULL,
+    `order`       INT NULL,
     is_public     BIT(1) NULL,
     is_deleted    BIT(1) NULL,
     course_id     BIGINT NULL,

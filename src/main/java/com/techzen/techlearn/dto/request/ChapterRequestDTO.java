@@ -14,14 +14,11 @@ import lombok.experimental.FieldDefaults;
 public class ChapterRequestDTO {
 
     @NotBlank(message = "CHAPTER_NAME_INVALID")
-    private String name;
-
-    @NotNull(message = "CHAPTER_ORDER_INVALID")
-    private Integer chapter_order;
-
-    @NotNull(message = "CHAPTER_IS_PUBLIC_INVALID")
-    private Boolean isPublic;
-
-    @NotNull(message = "CHAPTER_COURSE_ID_INVALID")
-    private Long courseId;
+    String name;
+    @NotBlank(message = "CHAPTER_ORDER_INVALID")
+    String chapterOrder;
+    @NotBlank(message = "CHAPTER_IS_PUBLIC_INVALID")
+    String isPublic;
+    @NotBlank(message = "CHAPTER_COURSE_ID_INVALID")
+    String courseId;
 }
