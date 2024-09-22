@@ -41,23 +41,22 @@ public class ChapterServiceImpl implements ChapterService {
 
     @Override
     public ChapterResponseDTO addChapter(ChapterRequestDTO request) {
-        var chapterEntity = chapterMapper.toChapterEntity(request);
-        var course = courseRepository.findById(Long.parseLong(request.getCourseId()))
+        courseRepository.findById(Long.parseLong(request.getCourseId()))
                 .orElseThrow(() -> new ApiException(ErrorCode.COURSE_NOT_EXISTED));
-        chapterEntity.setCourse(course);
+        var chapterEntity = chapterMapper.toChapterEntity(request);
         chapterEntity.setIsDeleted(false);
         return chapterMapper.toChapterResponseDTO(chapterRepository.save(chapterEntity));
     }
 
     @Override
     public ChapterResponseDTO updateChapter(Long id, ChapterRequestDTO request) {
-        var chapterEntity = chapterRepository.findById(id)
+        chapterRepository.findById(id)
                 .orElseThrow(() -> new ApiException(ErrorCode.CHAPTER_NOT_EXISTED));
-        var course = courseRepository.findById(Long.parseLong(request.getCourseId()))
+        courseRepository.findById(Long.parseLong(request.getCourseId()))
                 .orElseThrow(() -> new ApiException(ErrorCode.COURSE_NOT_EXISTED));
-        //chapterMapper.updateChapterEntityFromDTO(request, chapterEntity);
-        chapterEntity.setCourse(course);
-        //chapterEntity.setIsDeleted(false);
+        var chapterEntity = chapterMapper.toChapterEntity(request);
+        chapterEntity.setId(id);
+        chapterEntity.setIsDeleted(false);
         return chapterMapper.toChapterResponseDTO(chapterRepository.save(chapterEntity));
     }
 

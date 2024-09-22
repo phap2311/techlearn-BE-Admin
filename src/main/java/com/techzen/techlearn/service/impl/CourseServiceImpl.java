@@ -4,10 +4,12 @@ import com.techzen.techlearn.dto.request.CourseRequestDTO;
 import com.techzen.techlearn.dto.response.CourseResponseDTO;
 import com.techzen.techlearn.dto.response.PageResponse;
 import com.techzen.techlearn.entity.CourseEntity;
+import com.techzen.techlearn.entity.TechStackEntity;
 import com.techzen.techlearn.enums.ErrorCode;
 import com.techzen.techlearn.exception.ApiException;
 import com.techzen.techlearn.mapper.CourseMapper;
 import com.techzen.techlearn.repository.CourseRepository;
+import com.techzen.techlearn.repository.TechStackRepository;
 import com.techzen.techlearn.service.CourseService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +29,7 @@ public class CourseServiceImpl implements CourseService {
 
     CourseRepository courseRepository;
     CourseMapper courseMapper;
+    TechStackRepository techStackRepository;
 
     @Override
     public PageResponse<?> getAllCourse(int page, int size) {
@@ -53,16 +56,22 @@ public class CourseServiceImpl implements CourseService {
     public CourseResponseDTO addCourse(CourseRequestDTO request) {
         var course = courseMapper.toCourseEntity(request);
         course.setIsDeleted(false);
-        return courseMapper.toCourseResponseDTO(
-                courseRepository.save(course)
-        );
+        course.setTechStackEntities(getTechStackEntities(request, course));
+        return courseMapper.toCourseResponseDTO(courseRepository.save(course));
     }
+
 
     @Override
     public CourseResponseDTO updateCourse(Long id, CourseRequestDTO request) {
-        courseRepository.findById(id).orElseThrow(() -> new ApiException(ErrorCode.COURSE_NOT_EXISTED));
+        var existingCourse  = courseRepository.findById(id)
+                .orElseThrow(() -> new ApiException(ErrorCode.COURSE_NOT_EXISTED));
+        existingCourse.getTechStackEntities()
+                .forEach(tech -> tech.getCourses().remove(existingCourse));
+        existingCourse.getTechStackEntities().clear();
+        courseRepository.flush();
         var courseMap = courseMapper.toCourseEntity(request);
         courseMap.setId(id);
+        courseMap.setTechStackEntities(getTechStackEntities(request, courseMap));
         courseMap.setIsDeleted(false);
         return courseMapper.toCourseResponseDTO(courseRepository.save(courseMap));
     }
@@ -73,5 +82,13 @@ public class CourseServiceImpl implements CourseService {
                 new ApiException(ErrorCode.COURSE_NOT_EXISTED));
         course.setIsDeleted(true);
         courseRepository.save(course);
+    }
+
+    private List<TechStackEntity> getTechStackEntities(CourseRequestDTO requestDTO, CourseEntity course) {
+        return requestDTO.getTechStack().stream()
+                .map(id -> techStackRepository.findById(id)
+                        .orElseThrow(() -> new ApiException(ErrorCode.TECHSTACK_NOT_EXISTED)))
+                .peek(techStack -> techStack.getCourses().add(course))
+                .collect(Collectors.toList());
     }
 }

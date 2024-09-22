@@ -1,12 +1,15 @@
 package com.techzen.techlearn.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -32,4 +35,6 @@ public class CourseRequestDTO {
     @NotBlank(message = "COURSE_IS_PUBLIC_INVALID")
     @Pattern(regexp = "true|false", message = "COURSE_IS_PUBLIC_INVALID_TYPE")
     String isPublic;
+    @NotNull(message = "COURSE_TECHSTACK_INVALID")
+    List<Long> techStack;
 }
