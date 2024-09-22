@@ -15,7 +15,7 @@ public class ChapterRequestDTO {
 
     @NotBlank(message = "CHAPTER_NAME_INVALID")
     String name;
-    @NotBlank(message = "CHAPTER_ORDER_INVALID")
+
     String chapterOrder;
     @NotBlank(message = "CHAPTER_IS_PUBLIC_INVALID")
     String isPublic;

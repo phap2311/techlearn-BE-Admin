@@ -44,6 +44,8 @@ public class ChapterServiceImpl implements ChapterService {
         var chapterEntity = chapterMapper.toChapterEntity(request);
         var course = courseRepository.findById(Long.parseLong(request.getCourseId()))
                 .orElseThrow(() -> new ApiException(ErrorCode.COURSE_NOT_EXISTED));
+        Integer chapter_order = chapterRepository.findMaxOrderByCourseId(Long.parseLong(request.getCourseId()));
+        chapterEntity.setChapterOrder(chapter_order + 1);
         chapterEntity.setCourse(course);
         chapterEntity.setIsDeleted(false);
         return chapterMapper.toChapterResponseDTO(chapterRepository.save(chapterEntity));
@@ -55,9 +57,13 @@ public class ChapterServiceImpl implements ChapterService {
                 .orElseThrow(() -> new ApiException(ErrorCode.CHAPTER_NOT_EXISTED));
         var course = courseRepository.findById(Long.parseLong(request.getCourseId()))
                 .orElseThrow(() -> new ApiException(ErrorCode.COURSE_NOT_EXISTED));
-        //chapterMapper.updateChapterEntityFromDTO(request, chapterEntity);
+
+        chapterEntity.setName(request.getName());
+        chapterEntity.setChapterOrder(Integer.parseInt(request.getChapterOrder())); // Giả sử chapterOrder là int
+        chapterEntity.setIsPublic(Boolean.parseBoolean(request.getIsPublic())); // Giả sử isPublic là boolean
         chapterEntity.setCourse(course);
-        //chapterEntity.setIsDeleted(false);
+//        chapterEntity.setIsDeleted(false);
+
         return chapterMapper.toChapterResponseDTO(chapterRepository.save(chapterEntity));
     }
 
