@@ -59,7 +59,6 @@ public class ChapterServiceImpl implements ChapterService {
         var chapterEntity = chapterMapper.toChapterEntity(request);
         chapterEntity.setId(id);
         chapterEntity.setIsDeleted(false);
-        chapterEntity.setChapterOrder(Integer.parseInt(request.getChapterOrder()));
         return chapterMapper.toChapterResponseDTO(chapterRepository.save(chapterEntity));
     }
 
