@@ -44,6 +44,8 @@ public class ChapterServiceImpl implements ChapterService {
         courseRepository.findById(Long.parseLong(request.getCourseId()))
                 .orElseThrow(() -> new ApiException(ErrorCode.COURSE_NOT_EXISTED));
         var chapterEntity = chapterMapper.toChapterEntity(request);
+        var chapter_order = chapterRepository.findMaxOrderByCourseId(Long.parseLong(request.getCourseId()));
+        chapterEntity.setChapterOrder(chapter_order + 1);
         chapterEntity.setIsDeleted(false);
         return chapterMapper.toChapterResponseDTO(chapterRepository.save(chapterEntity));
     }
@@ -57,6 +59,7 @@ public class ChapterServiceImpl implements ChapterService {
         var chapterEntity = chapterMapper.toChapterEntity(request);
         chapterEntity.setId(id);
         chapterEntity.setIsDeleted(false);
+        chapterEntity.setChapterOrder(Integer.parseInt(request.getChapterOrder()));
         return chapterMapper.toChapterResponseDTO(chapterRepository.save(chapterEntity));
     }
 
