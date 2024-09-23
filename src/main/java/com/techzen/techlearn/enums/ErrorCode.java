@@ -72,6 +72,7 @@ public enum ErrorCode {
     COURSE_CURRENCY_UNIT_INVALID(170010, "The course currency must be USD or VND", HttpStatus.NOT_FOUND),
     COURSE_IS_ACTIVE_INVALID_TYPE(170011, "The course is active must be false or true", HttpStatus.NOT_FOUND),
     COURSE_IS_PUBLIC_INVALID_TYPE(170012, "The course is public must be false or true", HttpStatus.NOT_FOUND),
+    COURSE_TECHSTACK_INVALID(170013, "Course is tech stack must be not null", HttpStatus.NOT_FOUND),
 
     // Error code for chapter: 1800**
     CHAPTER_NOT_EXISTED(180001, "Chapter not existed", HttpStatus.NOT_FOUND),
@@ -93,6 +94,9 @@ public enum ErrorCode {
     COURSE_CONTENT_REFER_INVALID(190007, "Lesson content refer unit must be not blank", HttpStatus.NOT_FOUND),
     COURSE_TYPE_INVALID_TYPE(190008, "The Lesson type must be READINGS, LECTURES or EXERCISES", HttpStatus.NOT_FOUND),
     CHAPTER_ID_INVALID(190009, "Chapter id must be not blank", HttpStatus.NOT_FOUND),
+
+    // error code techstack: 2000**
+    TECHSTACK_NOT_EXISTED(200001, "Tech stack not existed", HttpStatus.NOT_FOUND),
 
     ;
     Integer code;

@@ -58,21 +58,22 @@ public class LessonServiceImpl implements LessonService {
 
     @Override
     public LessonResponseDTO addLesson(LessonRequestDTO request) {
-        var lesson = lessonMapper.toLessonEntity(request);
-        var chapter = chapterRepository.findById(Long.parseLong(request.getChapterId()))
+        chapterRepository.findById(Long.parseLong(request.getChapterId()))
                 .orElseThrow(() -> new ApiException(ErrorCode.CHAPTER_NOT_FOUND));
+        var lesson = lessonMapper.toLessonEntity(request);
         lesson.setIsDeleted(false);
-        lesson.setChapter(chapter);
         return lessonMapper.toLessonResponseDTO(lessonRepository.save(lesson));
     }
 
     @Override
     public LessonResponseDTO updateLesson(Long id, LessonRequestDTO request) {
-        var lesson = lessonRepository.findById(id).orElseThrow(() ->
+        lessonRepository.findById(id).orElseThrow(() ->
                 new ApiException(ErrorCode.LESSON_NOT_EXISTED));
-        var chapter = chapterRepository.findById(Long.parseLong(request.getChapterId()))
+        chapterRepository.findById(Long.parseLong(request.getChapterId()))
                 .orElseThrow(() -> new ApiException(ErrorCode.CHAPTER_NOT_FOUND));
-        lesson.setChapter(chapter);
+        var lesson = lessonMapper.toLessonEntity(request);
+        lesson.setId(id);
+        lesson.setIsDeleted(false);
         return lessonMapper.toLessonResponseDTO(lessonRepository.save(lesson));
     }
 

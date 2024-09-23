@@ -32,6 +32,6 @@ public class TechStackEntity extends BaseEntity {
     @ManyToMany
     @JoinTable(name = "tbl_course_tech_stack",
             joinColumns = @JoinColumn(name = "id_tech_stack"),
-    inverseJoinColumns = @JoinColumn(name = "is_course"))
+    inverseJoinColumns = @JoinColumn(name = "id_course"))
     List<CourseEntity> courses = new ArrayList<>();
 }

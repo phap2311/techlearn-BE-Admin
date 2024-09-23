@@ -7,6 +7,7 @@ import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.Where;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -53,6 +54,6 @@ public class CourseEntity extends BaseEntity {
     Boolean isDeleted;
 
     @ManyToMany(mappedBy = "courses")
-    List<TechStackEntity> techStackEntities;
+    List<TechStackEntity> techStackEntities = new ArrayList<>();
 
 }

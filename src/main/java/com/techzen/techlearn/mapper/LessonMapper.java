@@ -13,8 +13,6 @@ public interface LessonMapper {
     @Mapping(source = "chapter.id", target = "chapter")
     LessonResponseDTO toLessonResponseDTO(LessonEntity lesson);
 
+    @Mapping(source = "chapterId", target = "chapter.id")
     LessonEntity toLessonEntity(LessonRequestDTO lesson);
-
-/*    @Mapping(source = "chapterId", target = "chapter.id")
-    void updateLessonEntityFromDTO(LessonRequestDTO lessonRequestDTO, @MappingTarget LessonEntity lessonEntity);*/
 }

@@ -41,29 +41,25 @@ public class ChapterServiceImpl implements ChapterService {
 
     @Override
     public ChapterResponseDTO addChapter(ChapterRequestDTO request) {
-        var chapterEntity = chapterMapper.toChapterEntity(request);
-        var course = courseRepository.findById(Long.parseLong(request.getCourseId()))
+        courseRepository.findById(Long.parseLong(request.getCourseId()))
                 .orElseThrow(() -> new ApiException(ErrorCode.COURSE_NOT_EXISTED));
-        Integer chapter_order = chapterRepository.findMaxOrderByCourseId(Long.parseLong(request.getCourseId()));
+        var chapterEntity = chapterMapper.toChapterEntity(request);
+        var chapter_order = chapterRepository.findMaxOrderByCourseId(Long.parseLong(request.getCourseId()));
         chapterEntity.setChapterOrder(chapter_order + 1);
-        chapterEntity.setCourse(course);
         chapterEntity.setIsDeleted(false);
         return chapterMapper.toChapterResponseDTO(chapterRepository.save(chapterEntity));
     }
 
     @Override
     public ChapterResponseDTO updateChapter(Long id, ChapterRequestDTO request) {
-        var chapterEntity = chapterRepository.findById(id)
+        chapterRepository.findById(id)
                 .orElseThrow(() -> new ApiException(ErrorCode.CHAPTER_NOT_EXISTED));
-        var course = courseRepository.findById(Long.parseLong(request.getCourseId()))
+        courseRepository.findById(Long.parseLong(request.getCourseId()))
                 .orElseThrow(() -> new ApiException(ErrorCode.COURSE_NOT_EXISTED));
-
-        chapterEntity.setName(request.getName());
-        chapterEntity.setChapterOrder(Integer.parseInt(request.getChapterOrder())); // Giả sử chapterOrder là int
-        chapterEntity.setIsPublic(Boolean.parseBoolean(request.getIsPublic())); // Giả sử isPublic là boolean
-        chapterEntity.setCourse(course);
-//        chapterEntity.setIsDeleted(false);
-
+        var chapterEntity = chapterMapper.toChapterEntity(request);
+        chapterEntity.setId(id);
+        chapterEntity.setIsDeleted(false);
+        chapterEntity.setChapterOrder(Integer.parseInt(request.getChapterOrder()));
         return chapterMapper.toChapterResponseDTO(chapterRepository.save(chapterEntity));
     }
 
