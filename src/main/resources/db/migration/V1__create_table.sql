@@ -17,6 +17,16 @@ CREATE TABLE tbl_course
     CONSTRAINT pk_tbl_course PRIMARY KEY (id)
 );
 
+CREATE TABLE tbl_course_teacher
+(
+    course_id  BIGINT NOT NULL,
+    teacher_id BINARY(16) NOT NULL,
+    CONSTRAINT fk_course FOREIGN KEY (course_id) REFERENCES tbl_course(id) ,
+    CONSTRAINT fk_teacher FOREIGN KEY (teacher_id) REFERENCES tbl_teacher(id),
+    CONSTRAINT pk_tbl_course_teacher PRIMARY KEY (course_id, teacher_id)
+);
+
+
 CREATE TABLE tbl_chapter
 (
     id            BIGINT AUTO_INCREMENT NOT NULL,

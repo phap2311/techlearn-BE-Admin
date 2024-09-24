@@ -55,4 +55,12 @@ public class CourseEntity extends BaseEntity {
     @ManyToMany(mappedBy = "courses")
     List<TechStackEntity> techStackEntities;
 
+    @ManyToMany
+    @JoinTable(
+            name = "tbl_course_teacher",
+            joinColumns = @JoinColumn(name = "course_id"),
+            inverseJoinColumns = @JoinColumn(name = "teacher_id")
+    )
+    List<TeacherEntity> teachers;
+
 }

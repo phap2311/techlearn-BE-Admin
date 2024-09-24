@@ -4,10 +4,12 @@ import com.techzen.techlearn.dto.request.CourseRequestDTO;
 import com.techzen.techlearn.dto.response.CourseResponseDTO;
 import com.techzen.techlearn.dto.response.PageResponse;
 import com.techzen.techlearn.entity.CourseEntity;
+import com.techzen.techlearn.entity.TeacherEntity;
 import com.techzen.techlearn.enums.ErrorCode;
 import com.techzen.techlearn.exception.ApiException;
 import com.techzen.techlearn.mapper.CourseMapper;
 import com.techzen.techlearn.repository.CourseRepository;
+import com.techzen.techlearn.repository.TeacherRepository;
 import com.techzen.techlearn.service.CourseService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +19,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,6 +31,7 @@ public class CourseServiceImpl implements CourseService {
 
     CourseRepository courseRepository;
     CourseMapper courseMapper;
+    TeacherRepository teacherRepository;
 
     @Override
     public PageResponse<?> getAllCourse(int page, int size) {
@@ -53,19 +58,36 @@ public class CourseServiceImpl implements CourseService {
     public CourseResponseDTO addCourse(CourseRequestDTO request) {
         var course = courseMapper.toCourseEntity(request);
         course.setIsDeleted(false);
+        List<TeacherEntity> teachers = request.getTeachers().stream()
+                .map(teacherDto -> teacherRepository.findById(teacherDto.getId()).orElseThrow(() ->
+                        new ApiException(ErrorCode.TEACHER_NOT_EXISTED)))
+                .collect(Collectors.toList());
+
+
+        course.setTeachers(teachers);
+
         return courseMapper.toCourseResponseDTO(
                 courseRepository.save(course)
         );
     }
 
+
     @Override
     public CourseResponseDTO updateCourse(Long id, CourseRequestDTO request) {
-        courseRepository.findById(id).orElseThrow(() -> new ApiException(ErrorCode.COURSE_NOT_EXISTED));
+        courseRepository.findById(id).orElseThrow(() ->
+                new ApiException(ErrorCode.COURSE_NOT_EXISTED));
+
         var courseMap = courseMapper.toCourseEntity(request);
         courseMap.setId(id);
         courseMap.setIsDeleted(false);
+         List<TeacherEntity> teachers = request.getTeachers().stream()
+                .map(teacherDto -> teacherRepository.findById(teacherDto.getId()).orElseThrow(() ->
+                        new ApiException(ErrorCode.TEACHER_NOT_EXISTED)))
+                .collect(Collectors.toList());
+
         return courseMapper.toCourseResponseDTO(courseRepository.save(courseMap));
     }
+
 
     @Override
     public void deleteCourse(Long id) {

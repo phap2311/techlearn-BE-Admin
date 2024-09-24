@@ -25,4 +25,5 @@ public class CourseResponseDTO {
     Boolean isActive;
     Boolean isPublic;
     List<String> techStack;
+    List<TeacherResponseDTO> teachers;
 }
