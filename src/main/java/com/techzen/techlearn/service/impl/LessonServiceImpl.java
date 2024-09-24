@@ -62,6 +62,7 @@ public class LessonServiceImpl implements LessonService {
                 .orElseThrow(() -> new ApiException(ErrorCode.CHAPTER_NOT_FOUND));
         var lesson = lessonMapper.toLessonEntity(request);
         lesson.setIsDeleted(false);
+        lesson.setLessonOrder(1);
         return lessonMapper.toLessonResponseDTO(lessonRepository.save(lesson));
     }
 

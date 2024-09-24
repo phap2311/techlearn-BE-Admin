@@ -35,12 +35,12 @@ public class CourseController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody @Valid CourseRequestDTO request) {
+    public ResponseEntity<?> updateCourse(@PathVariable Long id, @RequestBody @Valid CourseRequestDTO request) {
         return JsonResponse.ok(courseService.updateCourse(id, request));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
+    public ResponseEntity<?> deleteCourse(@PathVariable Long id) {
         courseService.deleteCourse(id);
         return JsonResponse.deleted();
     }
