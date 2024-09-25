@@ -6,7 +6,6 @@ import com.techzen.techlearn.dto.response.ChapterResponseDTO;
 import com.techzen.techlearn.dto.response.PageResponse;
 import com.techzen.techlearn.entity.ChapterEntity;
 import com.techzen.techlearn.entity.MentorEntity;
-import com.techzen.techlearn.entity.TeacherEntity;
 import com.techzen.techlearn.enums.ErrorCode;
 import com.techzen.techlearn.exception.ApiException;
 import com.techzen.techlearn.mapper.ChapterMapper;
@@ -53,7 +52,7 @@ public class ChapterServiceImpl implements ChapterService {
         chapterEntity.setIsDeleted(false);
         List<MentorEntity> mentors = request.getMentor().stream()
                 .map(mentorDto -> mentorRepository.findById(mentorDto.getId())
-                        .orElseThrow(() -> new ApiException(ErrorCode.TEACHER_NOT_EXISTED)))
+                        .orElseThrow(() -> new ApiException(ErrorCode.MENTOR_NOT_EXISTED)))
                 .collect(Collectors.toList());
         chapterEntity.setMentors(mentors);
         return chapterMapper.toChapterResponseDTO(chapterRepository.save(chapterEntity));
