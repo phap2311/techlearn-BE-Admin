@@ -15,7 +15,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Where(clause = "is_deleted = false")
 @Table(name = "tbl_mentor")
-public class MentorEntity {
+public class MentorEntity extends BaseEntity{
     @Id
     private UUID id;
 

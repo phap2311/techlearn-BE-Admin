@@ -1,9 +1,12 @@
 package com.techzen.techlearn.dto.request;
 
+import com.techzen.techlearn.entity.MentorEntity;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -19,4 +22,7 @@ public class ChapterRequestDTO {
     String isPublic;
     @NotBlank(message = "CHAPTER_COURSE_ID_INVALID")
     String courseId;
+    @NotNull(message = "CHAPTER_MENTOR_INVALID")
+    List<MentorEntity> mentor;
+
 }
