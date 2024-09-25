@@ -1,5 +1,6 @@
 package com.techzen.techlearn.dto.request;
 
+import com.techzen.techlearn.entity.TeacherEntity;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -16,6 +17,7 @@ import java.util.List;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CourseRequestDTO {
+    Long id;
     @NotBlank(message = "COURSE_NAME_INVALID")
     String name;
     @NotBlank(message = "COURSE_PRICE_INVALID")
@@ -37,4 +39,7 @@ public class CourseRequestDTO {
     String isPublic;
     @NotNull(message = "COURSE_TECHSTACK_INVALID")
     List<Long> techStack;
+    @NotNull(message = "COURSE_TEACHER_INVALID")
+    List<TeacherEntity> teacher;
+
 }

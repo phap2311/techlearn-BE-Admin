@@ -4,11 +4,13 @@ import com.techzen.techlearn.dto.request.CourseRequestDTO;
 import com.techzen.techlearn.dto.response.CourseResponseDTO;
 import com.techzen.techlearn.dto.response.PageResponse;
 import com.techzen.techlearn.entity.CourseEntity;
+import com.techzen.techlearn.entity.TeacherEntity;
 import com.techzen.techlearn.entity.TechStackEntity;
 import com.techzen.techlearn.enums.ErrorCode;
 import com.techzen.techlearn.exception.ApiException;
 import com.techzen.techlearn.mapper.CourseMapper;
 import com.techzen.techlearn.repository.CourseRepository;
+import com.techzen.techlearn.repository.TeacherRepository;
 import com.techzen.techlearn.repository.TechStackRepository;
 import com.techzen.techlearn.service.CourseService;
 import lombok.AccessLevel;
@@ -30,6 +32,7 @@ public class CourseServiceImpl implements CourseService {
     CourseRepository courseRepository;
     CourseMapper courseMapper;
     TechStackRepository techStackRepository;
+    TeacherRepository teacherRepository;
 
     @Override
     public PageResponse<?> getAllCourse(int page, int size) {
@@ -56,6 +59,11 @@ public class CourseServiceImpl implements CourseService {
     public CourseResponseDTO addCourse(CourseRequestDTO request) {
         var course = courseMapper.toCourseEntity(request);
         course.setIsDeleted(false);
+        List<TeacherEntity> teachers = request.getTeacher().stream()
+                .map(teacherDto -> teacherRepository.findById(teacherDto.getId()).orElseThrow(() ->
+                        new ApiException(ErrorCode.TEACHER_NOT_EXISTED)))
+                .collect(Collectors.toList());
+        course.setTeachers(teachers);
         course.setTechStackEntities(getTechStackEntities(request, course));
         return courseMapper.toCourseResponseDTO(courseRepository.save(course));
     }
@@ -69,10 +77,15 @@ public class CourseServiceImpl implements CourseService {
                 .forEach(tech -> tech.getCourses().remove(existingCourse));
         existingCourse.getTechStackEntities().clear();
         courseRepository.flush();
+        List<TeacherEntity> teachers = request.getTeacher().stream()
+                .map(teacherDto -> teacherRepository.findById(teacherDto.getId()).orElseThrow(() ->
+                        new ApiException(ErrorCode.TEACHER_NOT_EXISTED)))
+                .collect(Collectors.toList());
         var courseMap = courseMapper.toCourseEntity(request);
         courseMap.setId(id);
         courseMap.setTechStackEntities(getTechStackEntities(request, courseMap));
         courseMap.setIsDeleted(false);
+        courseMap.setTeachers(teachers);
         return courseMapper.toCourseResponseDTO(courseRepository.save(courseMap));
     }
 
