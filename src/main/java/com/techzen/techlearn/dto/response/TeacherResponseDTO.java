@@ -15,14 +15,11 @@ import java.util.UUID;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TeacherResponseDTO {
 
-    @JsonProperty("Id")
     UUID id;
 
-    @JsonProperty("OwnerText")
     String name;
 
     String avatar;
 
-    @JsonProperty("OwnerColor")
     String color;
 }
