@@ -61,8 +61,9 @@ public class LessonServiceImpl implements LessonService {
         chapterRepository.findById(Long.parseLong(request.getChapterId()))
                 .orElseThrow(() -> new ApiException(ErrorCode.CHAPTER_NOT_FOUND));
         var lesson = lessonMapper.toLessonEntity(request);
+        var lesson_order = lessonRepository.findMaxOrderByChapterId(Long.parseLong(request.getChapterId()));
+        lesson.setLessonOrder(lesson_order + 1);
         lesson.setIsDeleted(false);
-        lesson.setLessonOrder(1);
         return lessonMapper.toLessonResponseDTO(lessonRepository.save(lesson));
     }
 
