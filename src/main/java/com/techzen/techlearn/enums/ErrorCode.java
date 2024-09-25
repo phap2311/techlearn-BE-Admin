@@ -50,6 +50,7 @@ public enum ErrorCode {
 
     // error code Teacher : 150*
     TEACHER_NOT_EXISTED(1015, "Teacher not existed", HttpStatus.NOT_FOUND),
+    MENTOR_NOT_EXISTED(1022, "Mentor not existed", HttpStatus.NOT_FOUND),
 
     // error code calendar : 160*
     TIME_NOT_SUITABLE(1016, "time start must time end equals ten minutes", HttpStatus.NOT_FOUND),
