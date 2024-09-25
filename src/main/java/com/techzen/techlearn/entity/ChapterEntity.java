@@ -5,6 +5,8 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.Where;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -35,4 +37,12 @@ public class ChapterEntity extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id")
     private CourseEntity course;
+
+    @ManyToMany
+    @JoinTable(
+            name = "tbl_chapter_mentor",
+            joinColumns = @JoinColumn(name = "chapter_id"),
+            inverseJoinColumns = @JoinColumn(name = "mentor_id")
+    )
+    List<MentorEntity> mentors;
 }
