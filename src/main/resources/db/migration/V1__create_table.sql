@@ -79,3 +79,12 @@ ALTER TABLE tbl_course_tech_stack
 
 ALTER TABLE tbl_course_tech_stack
     ADD CONSTRAINT fk_tblcoutecsta_on_tech_stack_entity FOREIGN KEY (id_tech_stack) REFERENCES tbl_tech_stack (id);
+
+
+CREATE TABLE tbl_course_teacher(
+    course_id  BIGINT NOT NULL,
+    teacher_id BINARY(16) NOT NULL,
+    CONSTRAINT fk_course FOREIGN KEY (course_id) REFERENCES tbl_course(id) ,
+    CONSTRAINT fk_teacher FOREIGN KEY (teacher_id) REFERENCES tbl_teacher(id),
+    CONSTRAINT pk_tbl_course_teacher PRIMARY KEY (course_id, teacher_id)
+);

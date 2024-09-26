@@ -1,9 +1,11 @@
 package com.techzen.techlearn.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.util.List;
+import java.util.UUID;
+
 
 @Getter
 @Setter
@@ -11,11 +13,13 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ChapterResponseDTO {
-    Long id;
+public class TeacherResponseDTO {
+
+    UUID id;
+
     String name;
-    Integer chapterOrder;
-    Boolean isPublic;
-    Long courseId;
-    List<MentorResponseDTO> mentor;
+
+    String avatar;
+
+    String color;
 }

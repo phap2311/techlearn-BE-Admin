@@ -5,11 +5,13 @@ import com.techzen.techlearn.dto.request.OrderDTO;
 import com.techzen.techlearn.dto.response.ChapterResponseDTO;
 import com.techzen.techlearn.dto.response.PageResponse;
 import com.techzen.techlearn.entity.ChapterEntity;
+import com.techzen.techlearn.entity.MentorEntity;
 import com.techzen.techlearn.enums.ErrorCode;
 import com.techzen.techlearn.exception.ApiException;
 import com.techzen.techlearn.mapper.ChapterMapper;
 import com.techzen.techlearn.repository.ChapterRepository;
 import com.techzen.techlearn.repository.CourseRepository;
+import com.techzen.techlearn.repository.MentorRepository;
 import com.techzen.techlearn.service.ChapterService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +33,7 @@ public class ChapterServiceImpl implements ChapterService {
     ChapterRepository chapterRepository;
     ChapterMapper chapterMapper;
     CourseRepository courseRepository;
+    MentorRepository mentorRepository;
 
     @Override
     public ChapterResponseDTO getChapterById(Long id) {
@@ -47,6 +50,11 @@ public class ChapterServiceImpl implements ChapterService {
         var chapter_order = chapterRepository.findMaxOrderByCourseId(Long.parseLong(request.getCourseId()));
         chapterEntity.setChapterOrder(chapter_order + 1);
         chapterEntity.setIsDeleted(false);
+        List<MentorEntity> mentors = request.getMentor().stream()
+                .map(mentorDto -> mentorRepository.findById(mentorDto.getId())
+                        .orElseThrow(() -> new ApiException(ErrorCode.MENTOR_NOT_EXISTED)))
+                .collect(Collectors.toList());
+        chapterEntity.setMentors(mentors);
         return chapterMapper.toChapterResponseDTO(chapterRepository.save(chapterEntity));
     }
 
@@ -56,9 +64,14 @@ public class ChapterServiceImpl implements ChapterService {
                 .orElseThrow(() -> new ApiException(ErrorCode.CHAPTER_NOT_EXISTED));
         courseRepository.findById(Long.parseLong(request.getCourseId()))
                 .orElseThrow(() -> new ApiException(ErrorCode.COURSE_NOT_EXISTED));
+        List<MentorEntity> mentors = request.getMentor().stream()
+                .map(mentorDto -> mentorRepository.findById(mentorDto.getId())
+                        .orElseThrow(() -> new ApiException(ErrorCode.MENTOR_NOT_EXISTED)))
+                .collect(Collectors.toList());
         var chapterEntity = chapterMapper.toChapterEntity(request);
         chapterEntity.setId(id);
         chapterEntity.setIsDeleted(false);
+        chapterEntity.setMentors(mentors);
         return chapterMapper.toChapterResponseDTO(chapterRepository.save(chapterEntity));
     }
 
