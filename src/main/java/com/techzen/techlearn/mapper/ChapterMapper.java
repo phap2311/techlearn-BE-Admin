@@ -19,12 +19,13 @@ public interface ChapterMapper {
     ChapterEntity toChapterEntity(ChapterRequestDTO chapterRequestDTO);
 
     @Mapping(source = "course.id", target = "courseId")
+    @Mapping(target = "mentor", source = "mentors",  qualifiedByName = "mapMentorEntitiesToResponseDTOs")
     ChapterResponseDTO toChapterResponseDTO(ChapterEntity chapterEntity);
 
 /*    @Mapping(source = "courseId", target = "course.id")
     void updateChapterEntityFromDTO(ChapterRequestDTO chapterRequestDTO, @MappingTarget ChapterEntity chapterEntity);*/
 
-    @Mapping(target = "mentor", source = "mentors")
+    @Named("mapMentorEntitiesToResponseDTOs")
     default List<MentorResponseDTO> mapMentorEntitiesToResponseDTOs(List<MentorEntity> mentors) {
         return mentors.stream()
                 .map(mentor -> MentorResponseDTO.builder()

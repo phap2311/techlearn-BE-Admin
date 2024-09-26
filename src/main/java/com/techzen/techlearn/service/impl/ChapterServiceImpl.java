@@ -64,9 +64,14 @@ public class ChapterServiceImpl implements ChapterService {
                 .orElseThrow(() -> new ApiException(ErrorCode.CHAPTER_NOT_EXISTED));
         courseRepository.findById(Long.parseLong(request.getCourseId()))
                 .orElseThrow(() -> new ApiException(ErrorCode.COURSE_NOT_EXISTED));
+        List<MentorEntity> mentors = request.getMentor().stream()
+                .map(mentorDto -> mentorRepository.findById(mentorDto.getId())
+                        .orElseThrow(() -> new ApiException(ErrorCode.MENTOR_NOT_EXISTED)))
+                .collect(Collectors.toList());
         var chapterEntity = chapterMapper.toChapterEntity(request);
         chapterEntity.setId(id);
         chapterEntity.setIsDeleted(false);
+        chapterEntity.setMentors(mentors);
         return chapterMapper.toChapterResponseDTO(chapterRepository.save(chapterEntity));
     }
 
