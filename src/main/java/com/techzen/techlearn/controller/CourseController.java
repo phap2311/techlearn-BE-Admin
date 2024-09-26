@@ -10,6 +10,8 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -27,6 +29,11 @@ public class CourseController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getCourseById(@PathVariable Long id) {
         return JsonResponse.ok(courseService.getCourseById(id));
+    }
+
+    @GetMapping("/list-id")
+    public ResponseEntity<?> getCourseByListId(@RequestParam List<Long> id) {
+        return JsonResponse.ok(courseService.getCourseByListId(id));
     }
 
     @PostMapping

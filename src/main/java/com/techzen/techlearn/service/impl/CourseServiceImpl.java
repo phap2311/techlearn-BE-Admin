@@ -97,6 +97,22 @@ public class CourseServiceImpl implements CourseService {
         courseRepository.save(course);
     }
 
+    @Override
+    public PageResponse<?> getCourseByListId(List<Long> id) {
+        var courses = courseRepository.findAllById(id);
+        if (courses.isEmpty()) {
+            throw new ApiException(ErrorCode.COURSE_NOT_EXISTED);
+        }
+        List<CourseResponseDTO> list =  courses.stream().map(courseMapper::toCourseResponseDTO)
+                .collect(Collectors.toList());
+        return PageResponse.builder()
+                .page(0)
+                .pageSize(0)
+                .totalPage(0)
+                .items(list)
+                .build();
+    }
+
     private List<TechStackEntity> getTechStackEntities(CourseRequestDTO requestDTO, CourseEntity course) {
         return requestDTO.getTechStack().stream()
                 .map(id -> techStackRepository.findById(id)

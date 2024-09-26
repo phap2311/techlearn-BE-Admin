@@ -5,6 +5,8 @@ import com.techzen.techlearn.dto.response.CourseResponseDTO;
 import com.techzen.techlearn.dto.response.PageResponse;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public interface CourseService {
     PageResponse<?> getAllCourse(int page, int size);
@@ -16,4 +18,6 @@ public interface CourseService {
     CourseResponseDTO updateCourse(Long id, CourseRequestDTO request);
 
     void deleteCourse(Long id);
+
+    PageResponse<?> getCourseByListId(List<Long> id);
 }
