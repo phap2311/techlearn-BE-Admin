@@ -39,7 +39,7 @@ public class CourseRequestDTO {
     String isPublic;
     @NotNull(message = "COURSE_TECHSTACK_INVALID")
     List<Long> techStack;
-    @NotNull(message = "COURSE_TEACHER_INVALID")
+    @NotNull(message = "TEACHER_INVALID")
     List<TeacherEntity> teacher;
 
 }
