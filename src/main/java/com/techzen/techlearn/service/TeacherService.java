@@ -5,6 +5,7 @@ import com.techzen.techlearn.dto.request.TeacherRequestDTO;
 import com.techzen.techlearn.dto.response.PageResponse;
 import com.techzen.techlearn.dto.response.TeacherResponseDTO;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface TeacherService {
@@ -16,4 +17,6 @@ public interface TeacherService {
     TeacherResponseDTO updateTeacher(UUID id, TeacherRequestDTO request);
 
     void deleteTeacher(UUID id);
+
+    List<TeacherResponseDTO> getTeacherByIdCourse(Long id);
 }

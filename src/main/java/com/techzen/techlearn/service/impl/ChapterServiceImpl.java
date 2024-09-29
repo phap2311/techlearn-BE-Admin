@@ -110,4 +110,12 @@ public class ChapterServiceImpl implements ChapterService {
                 .collect(Collectors.toList());
         chapterRepository.saveAll(lessonsToUpdate);
     }
+
+    @Override
+    public List<ChapterResponseDTO> getChapterByIdCourse(Long id) {
+        var chapters = chapterRepository.findAllByCourseId(id)
+                .orElseThrow(() -> new ApiException(ErrorCode.CHAPTER_NOT_EXISTED));
+        return chapters.stream().map(chapterMapper::toChapterResponseDTO)
+                .collect(Collectors.toList());
+    }
 }

@@ -1,7 +1,9 @@
 package com.techzen.techlearn.controller;
 
 import com.techzen.techlearn.dto.request.CourseRequestDTO;
+import com.techzen.techlearn.service.ChapterService;
 import com.techzen.techlearn.service.CourseService;
+import com.techzen.techlearn.service.TeacherService;
 import com.techzen.techlearn.util.JsonResponse;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -19,6 +21,8 @@ import java.util.List;
 public class CourseController {
 
     CourseService courseService;
+    ChapterService chapterService;
+    TeacherService teacherService;
 
     @GetMapping
     public ResponseEntity<?> getAllCourse(@RequestParam(required = false, defaultValue = "1") int page,
@@ -34,6 +38,16 @@ public class CourseController {
     @GetMapping("/list-id")
     public ResponseEntity<?> getCourseByListId(@RequestParam List<Long> id) {
         return JsonResponse.ok(courseService.getCourseByListId(id));
+    }
+
+    @GetMapping("/{id}/chapters")
+    public ResponseEntity<?> getChapterByIdCourse(@PathVariable Long id) {
+        return JsonResponse.ok(chapterService.getChapterByIdCourse(id));
+    }
+
+    @GetMapping("/{id}/teacher")
+    public ResponseEntity<?> getTeacherByIdCourse(@PathVariable Long id) {
+        return JsonResponse.ok(teacherService.getTeacherByIdCourse(id));
     }
 
     @PostMapping

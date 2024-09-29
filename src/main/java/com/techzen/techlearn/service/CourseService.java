@@ -3,6 +3,7 @@ package com.techzen.techlearn.service;
 import com.techzen.techlearn.dto.request.CourseRequestDTO;
 import com.techzen.techlearn.dto.response.CourseResponseDTO;
 import com.techzen.techlearn.dto.response.PageResponse;
+import com.techzen.techlearn.dto.response.TeacherResponseDTO;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,5 +20,5 @@ public interface CourseService {
 
     void deleteCourse(Long id);
 
-    PageResponse<?> getCourseByListId(List<Long> id);
+    List<CourseResponseDTO> getCourseByListId(List<Long> id);
 }
