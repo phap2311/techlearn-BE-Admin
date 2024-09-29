@@ -121,11 +121,4 @@ public class MentorServiceImpl implements MentorService {
         mentorRepository.deleteMentorChapter(uuid, id);
     }
 
-    @Override
-    public List<MentorResponseDTO> getAll() {
-        return mentorRepository.findAll().stream()
-                .map(mentorMapper::toMentorResponseDto)
-                .collect(Collectors.toList());
-    }
-
 }

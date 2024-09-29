@@ -26,11 +26,6 @@ public class MentorController {
         return JsonResponse.ok(mentorService.findAll(page, pageSize));
     }
 
-//    @GetMapping
-//    public ResponseEntity<?> getAll(){
-//        return JsonResponse.ok(mentorService.getAll());
-//    }
-
     @GetMapping("/{id}")
     public ResponseEntity<?> getMentorById(@PathVariable UUID id) {
         return JsonResponse.ok(mentorService.getMentorById(id));
