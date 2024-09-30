@@ -6,6 +6,7 @@ import com.techzen.techlearn.dto.response.LessonResponseDTO;
 import com.techzen.techlearn.dto.response.PageResponse;
 import com.techzen.techlearn.entity.LessonEntity;
 import com.techzen.techlearn.enums.ErrorCode;
+import com.techzen.techlearn.enums.TypeLesson;
 import com.techzen.techlearn.exception.ApiException;
 import com.techzen.techlearn.mapper.LessonMapper;
 import com.techzen.techlearn.repository.ChapterRepository;
@@ -97,5 +98,19 @@ public class LessonServiceImpl implements LessonService {
                         .orElseThrow(() -> new ApiException(ErrorCode.LESSON_NOT_EXISTED)))
                 .collect(Collectors.toList());
         lessonRepository.saveAll(lessonsToUpdate);
+    }
+
+    @Override
+    public List<LessonResponseDTO> getAssignmentByIdChapter(Long id) {
+        return lessonRepository.findByChapterId(id)
+                .stream().map(lessonMapper::toLessonResponseDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<LessonResponseDTO> getAllAssignment() {
+        return lessonRepository.findAllByType(TypeLesson.EXERCISES)
+                .stream().map(lessonMapper::toLessonResponseDTO)
+                .collect(Collectors.toList());
     }
 }

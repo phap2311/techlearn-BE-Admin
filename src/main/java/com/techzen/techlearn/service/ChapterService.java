@@ -20,4 +20,6 @@ public interface ChapterService {
     PageResponse<?> getAllChapters(int page, int pageSize, Long id);
 
     void updateOrder(List<OrderDTO> orderDTOS);
+
+    List<ChapterResponseDTO> getChapterByIdCourse(Long id);
 }
