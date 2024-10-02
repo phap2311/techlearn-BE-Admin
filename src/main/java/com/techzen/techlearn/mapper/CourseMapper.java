@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
 @Mapper(componentModel = "spring")
 public interface CourseMapper {
     @Mapping(target = "techStack", source = "techStackEntities", qualifiedByName = "mapTechStackEntitiesToDTOs")
-    @Mapping(target = "teacher", source = "teachers", qualifiedByName = "mapTeacherEntitiesToResponseDTOs")
     CourseResponseDTO toCourseResponseDTO(CourseEntity courseEntity);
 
     CourseEntity toCourseEntity(CourseRequestDTO courseRequestDTO);
@@ -32,15 +31,4 @@ public interface CourseMapper {
                 .collect(Collectors.toList());
     }
 
-    @Named("mapTeacherEntitiesToResponseDTOs")
-    default List<TeacherResponseDTO> mapTeacherEntitiesToResponseDTOs(List<TeacherEntity> teachers) {
-        return teachers.stream()
-                .map(teacher -> TeacherResponseDTO.builder()
-                        .id(teacher.getId())
-                        .name(teacher.getName())
-                        .avatar(teacher.getAvatar())
-                        .color(teacher.getColor()   )
-                        .build())
-                .collect(Collectors.toList());
-    }
 }
