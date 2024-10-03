@@ -50,6 +50,12 @@ public class ChapterController {
         return JsonResponse.ok(chapterService.updateChapter(id, request));
     }
 
+    @PutMapping
+    public ResponseEntity<?> updateListChapter(@RequestBody ChapterRequestDTO request) {
+        chapterService.updateListChapter(request);
+        return ResponseEntity.ok().build();
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteChapter(@PathVariable Long id) {
         chapterService.deleteChapter(id);
