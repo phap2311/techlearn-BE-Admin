@@ -1,11 +1,14 @@
 package com.techzen.techlearn.service.impl;
 
 import com.techzen.techlearn.dto.request.ChapterRequestDTO;
+import com.techzen.techlearn.dto.request.CourseRequestDTO;
 import com.techzen.techlearn.dto.request.OrderDTO;
 import com.techzen.techlearn.dto.response.ChapterResponseDTO;
 import com.techzen.techlearn.dto.response.PageResponse;
 import com.techzen.techlearn.entity.ChapterEntity;
+import com.techzen.techlearn.entity.CourseEntity;
 import com.techzen.techlearn.entity.MentorEntity;
+import com.techzen.techlearn.entity.TechStackEntity;
 import com.techzen.techlearn.enums.ErrorCode;
 import com.techzen.techlearn.exception.ApiException;
 import com.techzen.techlearn.mapper.ChapterMapper;
@@ -50,11 +53,7 @@ public class ChapterServiceImpl implements ChapterService {
         var chapter_order = chapterRepository.findMaxOrderByCourseId(Long.parseLong(request.getCourseId()));
         chapterEntity.setChapterOrder(chapter_order != null? chapter_order + 1 : 1);
         chapterEntity.setIsDeleted(false);
-        List<MentorEntity> mentors = request.getMentor().stream()
-                .map(mentorDto -> mentorRepository.findById(mentorDto.getId())
-                        .orElseThrow(() -> new ApiException(ErrorCode.MENTOR_NOT_EXISTED)))
-                .collect(Collectors.toList());
-        chapterEntity.setMentors(mentors);
+        chapterEntity.setMentors(getMentorEntities(request));
         return chapterMapper.toChapterResponseDTO(chapterRepository.save(chapterEntity));
     }
 
@@ -64,15 +63,26 @@ public class ChapterServiceImpl implements ChapterService {
                 .orElseThrow(() -> new ApiException(ErrorCode.CHAPTER_NOT_EXISTED));
         courseRepository.findById(Long.parseLong(request.getCourseId()))
                 .orElseThrow(() -> new ApiException(ErrorCode.COURSE_NOT_EXISTED));
-        List<MentorEntity> mentors = request.getMentor().stream()
-                .map(mentorDto -> mentorRepository.findById(mentorDto.getId())
-                        .orElseThrow(() -> new ApiException(ErrorCode.MENTOR_NOT_EXISTED)))
-                .collect(Collectors.toList());
         var chapterEntity = chapterMapper.toChapterEntity(request);
         chapterEntity.setId(id);
         chapterEntity.setIsDeleted(false);
-        chapterEntity.setMentors(mentors);
+        chapterEntity.setMentors(getMentorEntities(request));
         return chapterMapper.toChapterResponseDTO(chapterRepository.save(chapterEntity));
+    }
+
+    @Override
+    public void updateListChapter(ChapterRequestDTO request) {
+        List<ChapterEntity> chapters = getChapterEntities(request);
+        courseRepository.findById(Long.parseLong(request.getCourseId()))
+                .orElseThrow(() -> new ApiException(ErrorCode.COURSE_NOT_EXISTED));
+        for (ChapterEntity chapter: chapters) {
+            ChapterEntity updatedChapter = chapterMapper.toChapterEntity(request);
+            updatedChapter.setId(chapter.getId());
+            updatedChapter.setName(chapter.getName());
+            updatedChapter.setMentors(getMentorEntities(request));
+            updatedChapter.setIsDeleted(false);
+            chapterRepository.save(updatedChapter);
+        }
     }
 
     @Override
@@ -117,5 +127,16 @@ public class ChapterServiceImpl implements ChapterService {
                 .orElseThrow(() -> new ApiException(ErrorCode.CHAPTER_NOT_EXISTED));
         return chapters.stream().map(chapterMapper::toChapterResponseDTO)
                 .collect(Collectors.toList());
+    }
+    private List<MentorEntity> getMentorEntities(ChapterRequestDTO requestDTO) {
+        return requestDTO.getMentorId().stream()
+                .map((id) -> mentorRepository.findById(id).orElseThrow(()-> new ApiException(ErrorCode.MENTOR_NOT_EXISTED))).toList();
+
+    }
+
+    private List<ChapterEntity> getChapterEntities(ChapterRequestDTO requestDTO) {
+        return requestDTO.getChapterId().stream()
+                .map((id) -> chapterRepository.findById(id).orElseThrow(()->new ApiException(ErrorCode.CHAPTER_NOT_EXISTED))).toList();
+
     }
 }
