@@ -37,6 +37,7 @@ public class CourseServiceImpl implements CourseService {
     CourseMapper courseMapper;
     TechStackRepository techStackRepository;
     ImageService imageService;
+    TeacherRepository teacherRepository;
 
     @Override
     public PageResponse<?> getAllCourse(int page, int size) {
@@ -64,6 +65,7 @@ public class CourseServiceImpl implements CourseService {
         var course = courseMapper.toCourseEntity(request);
         course.setIsDeleted(false);
         course.setThumbnailUrl(imageService.upload(file));
+        course.setTeachers(getTeacherEntities(request));
         course.setTechStackEntities(getTechStackEntities(request, course));
         return courseMapper.toCourseResponseDTO(courseRepository.save(course));
     }
@@ -81,6 +83,7 @@ public class CourseServiceImpl implements CourseService {
         courseMap.setId(id);
         courseMap.setTechStackEntities(getTechStackEntities(request, courseMap));
         courseMap.setIsDeleted(false);
+        courseMap.setTeachers(getTeacherEntities(request));
         courseMap.setThumbnailUrl(imageService.upload(file));
         return courseMapper.toCourseResponseDTO(courseRepository.save(courseMap));
     }
@@ -108,6 +111,13 @@ public class CourseServiceImpl implements CourseService {
                 .map(id -> techStackRepository.findById(Long.parseLong(id))
                         .orElseThrow(() -> new ApiException(ErrorCode.TECHSTACK_NOT_EXISTED)))
                 .peek(techStack -> techStack.getCourses().add(course))
+                .collect(Collectors.toList());
+    }
+
+    private List<TeacherEntity> getTeacherEntities(CourseRequestDTO requestDTO) {
+        return requestDTO.getTeacher().stream()
+                .map(teacherDto -> teacherRepository.findById(teacherDto.getId()).orElseThrow(() ->
+                        new ApiException(ErrorCode.TEACHER_NOT_EXISTED)))
                 .collect(Collectors.toList());
     }
 }
