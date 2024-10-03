@@ -48,7 +48,7 @@ public class ChapterServiceImpl implements ChapterService {
                 .orElseThrow(() -> new ApiException(ErrorCode.COURSE_NOT_EXISTED));
         var chapterEntity = chapterMapper.toChapterEntity(request);
         var chapter_order = chapterRepository.findMaxOrderByCourseId(Long.parseLong(request.getCourseId()));
-        chapterEntity.setChapterOrder(chapter_order + 1);
+        chapterEntity.setChapterOrder(chapter_order != null? chapter_order + 1 : 1);
         chapterEntity.setIsDeleted(false);
         List<MentorEntity> mentors = request.getMentor().stream()
                 .map(mentorDto -> mentorRepository.findById(mentorDto.getId())
@@ -109,5 +109,13 @@ public class ChapterServiceImpl implements ChapterService {
                         .orElseThrow(() -> new ApiException(ErrorCode.LESSON_NOT_EXISTED)))
                 .collect(Collectors.toList());
         chapterRepository.saveAll(lessonsToUpdate);
+    }
+
+    @Override
+    public List<ChapterResponseDTO> getChapterByIdCourse(Long id) {
+        var chapters = chapterRepository.findAllByCourseId(id)
+                .orElseThrow(() -> new ApiException(ErrorCode.CHAPTER_NOT_EXISTED));
+        return chapters.stream().map(chapterMapper::toChapterResponseDTO)
+                .collect(Collectors.toList());
     }
 }

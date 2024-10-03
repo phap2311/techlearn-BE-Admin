@@ -28,6 +28,11 @@ public class LessonController {
         return JsonResponse.ok(lessonService.getAllLesson(page, pageSize, idChapter));
     }
 
+    @GetMapping("/assignments")
+    public ResponseEntity<?> getAllAssignment() {
+        return JsonResponse.ok(lessonService.getAllAssignment());
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<?> getLessonById(@PathVariable Long id) {
         return JsonResponse.ok(lessonService.getLessonById(id));

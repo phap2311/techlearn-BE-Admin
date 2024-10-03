@@ -3,6 +3,7 @@ package com.techzen.techlearn.controller;
 import com.techzen.techlearn.dto.request.ChapterRequestDTO;
 import com.techzen.techlearn.dto.request.OrderDTO;
 import com.techzen.techlearn.service.ChapterService;
+import com.techzen.techlearn.service.LessonService;
 import com.techzen.techlearn.util.JsonResponse;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -20,6 +21,7 @@ import java.util.List;
 public class ChapterController {
 
     ChapterService chapterService;
+    LessonService lessonService;
 
     @GetMapping
     public ResponseEntity<?> getAllChapters(@RequestParam(required = false, defaultValue = "1") int page,
@@ -31,6 +33,11 @@ public class ChapterController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getChapterById(@PathVariable Long id) {
         return JsonResponse.ok(chapterService.getChapterById(id));
+    }
+
+    @GetMapping("/{id}/assignment")
+    public ResponseEntity<?> getAssignmentByIdChapter(@PathVariable Long id) {
+        return JsonResponse.ok(lessonService.getAssignmentByIdChapter(id));
     }
 
     @PostMapping

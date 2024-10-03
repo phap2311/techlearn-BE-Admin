@@ -21,4 +21,8 @@ public interface LessonService {
     void deleteLesson(Long id);
 
     void updateOrder(List<OrderDTO> lessonOrderList);
+
+    List<LessonResponseDTO> getAssignmentByIdChapter(Long id);
+
+    List<LessonResponseDTO> getAllAssignment();
 }
