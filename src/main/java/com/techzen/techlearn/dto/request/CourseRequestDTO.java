@@ -35,5 +35,4 @@ public class CourseRequestDTO {
     List<String> techStack;
     @NotNull(message = "TEACHER_INVALID")
     List<TeacherEntity> teacher;
-
 }
