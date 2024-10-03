@@ -25,4 +25,5 @@ public class CourseResponseDTO {
     CurrencyUnit currencyUnit;
     Boolean isActive;
     List<TechStackResponseDTO> techStack;
+    List<TeacherResponseDTO> teacher;
 }

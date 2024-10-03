@@ -59,6 +59,7 @@ public class PointServiceImpl implements PointService {
         point.setPrice(newPoint.getPrice());
         point.setPoints(newPoint.getPoints());
         point.setCurrency(newPoint.getCurrency());
+        point.setUser(newPoint.getUser());
         return pointMapper.toPointResponseDTO(pointRepository.save(point));
     }
 
