@@ -7,6 +7,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -23,6 +24,7 @@ public class ChapterRequestDTO {
     @NotBlank(message = "CHAPTER_COURSE_ID_INVALID")
     String courseId;
     @NotNull(message = "CHAPTER_MENTOR_INVALID")
-    List<MentorEntity> mentor;
+    List<UUID> mentorId;
+    List<Long> chapterId;
 
 }
