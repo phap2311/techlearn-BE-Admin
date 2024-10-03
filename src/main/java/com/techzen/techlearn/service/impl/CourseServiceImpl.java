@@ -84,7 +84,11 @@ public class CourseServiceImpl implements CourseService {
         courseMap.setTechStackEntities(getTechStackEntities(request, courseMap));
         courseMap.setIsDeleted(false);
         courseMap.setTeachers(getTeacherEntities(request));
-        courseMap.setThumbnailUrl(imageService.upload(file));
+        if(file != null){
+            courseMap.setThumbnailUrl(imageService.upload(file));
+        }else {
+            courseMap.setThumbnailUrl(existingCourse.getThumbnailUrl());
+        }
         return courseMapper.toCourseResponseDTO(courseRepository.save(courseMap));
     }
 
