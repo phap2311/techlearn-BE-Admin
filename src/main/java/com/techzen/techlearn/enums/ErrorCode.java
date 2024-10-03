@@ -99,6 +99,9 @@ public enum ErrorCode {
     // error code techstack: 2000**
     TECHSTACK_NOT_EXISTED(200001, "Tech stack not existed", HttpStatus.NOT_FOUND),
 
+    // error code point
+    POINT_NOT_FOUND(10404, "Point not found", HttpStatus.BAD_REQUEST);
+
     ;
     Integer code;
     String message;
