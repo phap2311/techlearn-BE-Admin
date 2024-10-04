@@ -40,7 +40,6 @@ public class CourseEntity extends BaseEntity {
     @Column(name = "public_point")
     Integer publicPoint;
 
-
     @Column(name = "description", columnDefinition = "NTEXT")
     String description;
 
