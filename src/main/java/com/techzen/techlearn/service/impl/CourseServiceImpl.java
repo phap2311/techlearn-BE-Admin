@@ -70,7 +70,6 @@ public class CourseServiceImpl implements CourseService {
         return courseMapper.toCourseResponseDTO(courseRepository.save(course));
     }
 
-
     @Override
     public CourseResponseDTO updateCourse(Long id, CourseRequestDTO request, MultipartFile file) {
         var existingCourse = courseRepository.findById(id)
@@ -120,7 +119,7 @@ public class CourseServiceImpl implements CourseService {
 
     private List<TeacherEntity> getTeacherEntities(CourseRequestDTO requestDTO) {
         return requestDTO.getTeacher().stream()
-                .map(teacherDto -> teacherRepository.findById(teacherDto.getId()).orElseThrow(() ->
+                .map(id -> teacherRepository.findById(id).orElseThrow(() ->
                         new ApiException(ErrorCode.TEACHER_NOT_EXISTED)))
                 .collect(Collectors.toList());
     }
