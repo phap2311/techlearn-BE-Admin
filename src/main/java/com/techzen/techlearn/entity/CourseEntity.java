@@ -34,8 +34,12 @@ public class CourseEntity extends BaseEntity {
     @Column(name = "thumbnail_url")
     String thumbnailUrl;
 
-    @Column(name = "point")
-    Integer point;
+    @Column(name = "private_point")
+    Integer privatePoint;
+
+    @Column(name = "public_point")
+    Integer publicPoint;
+
 
     @Column(name = "description", columnDefinition = "NTEXT")
     String description;

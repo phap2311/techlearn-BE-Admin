@@ -53,7 +53,7 @@ public class ChapterServiceImpl implements ChapterService {
         var chapter_order = chapterRepository.findMaxOrderByCourseId(Long.parseLong(request.getCourseId()));
         chapterEntity.setChapterOrder(chapter_order != null? chapter_order + 1 : 1);
         chapterEntity.setIsDeleted(false);
-        chapterEntity.setMentors(getMentorEntities(request));
+//        chapterEntity.setMentors(getMentorEntities(request));
         return chapterMapper.toChapterResponseDTO(chapterRepository.save(chapterEntity));
     }
 
@@ -66,7 +66,7 @@ public class ChapterServiceImpl implements ChapterService {
         var chapterEntity = chapterMapper.toChapterEntity(request);
         chapterEntity.setId(id);
         chapterEntity.setIsDeleted(false);
-        chapterEntity.setMentors(getMentorEntities(request));
+//        chapterEntity.setMentors(getMentorEntities(request));
         return chapterMapper.toChapterResponseDTO(chapterRepository.save(chapterEntity));
     }
 

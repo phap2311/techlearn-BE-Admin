@@ -23,7 +23,7 @@ public class ChapterRequestDTO {
     String isPublic;
     @NotBlank(message = "CHAPTER_COURSE_ID_INVALID")
     String courseId;
-    @NotNull(message = "CHAPTER_MENTOR_INVALID")
+//    @NotNull(message = "CHAPTER_MENTOR_INVALID")
     List<UUID> mentorId;
     List<Long> chapterId;
 
