@@ -11,6 +11,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -24,6 +25,11 @@ public class MentorController {
     public ResponseEntity<?> getAllMentor(@RequestParam(required = false, defaultValue = "1") int page,
                                            @RequestParam(required = false, defaultValue = "10") int pageSize) {
         return JsonResponse.ok(mentorService.findAll(page, pageSize));
+    }
+
+    @GetMapping("/get-all")
+    public ResponseEntity<?> getAllMentors() {
+        return JsonResponse.ok(mentorService.findAllMentors());
     }
 
     @GetMapping("/{id}")
@@ -50,6 +56,11 @@ public class MentorController {
     @PostMapping("{mentor_id}/create-mentor-chapter/{chapter_id}")
     public ResponseEntity<?> addMentorToChapter(@PathVariable UUID mentor_id, @PathVariable Long chapter_id) {
         return ResponseEntity.ok(mentorService.addMentorToChapter(mentor_id, chapter_id));
+    }
+
+    @PostMapping("{mentor_id}/create-mentor-all-chapter")
+    public ResponseEntity<?> addMentorToAllChapter(@PathVariable UUID mentor_id, @RequestBody List<Long> chapterIds) {
+        return ResponseEntity.ok(mentorService.addMentorToAllChapter(mentor_id, chapterIds));
     }
 
     @PutMapping("/{mentor_id}/update-mentor-chapter/{chapter_id}")

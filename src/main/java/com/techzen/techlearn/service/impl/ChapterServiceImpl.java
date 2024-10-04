@@ -98,7 +98,7 @@ public class ChapterServiceImpl implements ChapterService {
         Pageable pageable = PageRequest.of(page > 0 ? page - 1 : 0, pageSize,
                 Sort.by("chapterOrder"));
         Page<ChapterEntity> chapter = chapterRepository.findAllByCourseId(id, pageable);
-        List<ChapterResponseDTO> list = chapter.map(chapterMapper::toChapterResponseDTO)
+        List<ChapterResponseDTO> list = chapter.map(chapterMapper::toChapterMentorResponseDTO)
                 .stream().collect(Collectors.toList());
         return PageResponse.builder()
                 .page(page)

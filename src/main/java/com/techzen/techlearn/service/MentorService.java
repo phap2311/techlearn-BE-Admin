@@ -6,11 +6,14 @@ import com.techzen.techlearn.dto.response.MentorResponseDTO;
 import com.techzen.techlearn.dto.response.PageResponse;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
 public interface MentorService {
     PageResponse<?> findAll(int page, int pageSize);
+
+    List<MentorResponseDTO> findAllMentors();
 
     MentorResponseDTO getMentorById(UUID id);
 
@@ -21,6 +24,8 @@ public interface MentorService {
     void deleteMentor(UUID id);
 
     MentorResponseDTO addMentorToChapter(UUID uuid, Long id);
+
+    List<MentorResponseDTO> addMentorToAllChapter(UUID mentorId, List<Long> chapterIds);
 
     MentorResponseDTO updateMentorToChapter(UUID uuid, Long id, MentorChapterRequestDTO request);
 
