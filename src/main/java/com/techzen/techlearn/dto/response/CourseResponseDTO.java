@@ -24,7 +24,6 @@ public class CourseResponseDTO {
     String description;
     CurrencyUnit currencyUnit;
     Boolean isActive;
-    Boolean isPublic;
     List<TechStackResponseDTO> techStack;
     List<TeacherResponseDTO> teacher;
 }
