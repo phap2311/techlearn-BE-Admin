@@ -20,10 +20,8 @@ CREATE TABLE tbl_currency
         points        INT NULL,
         price         DECIMAL(10, 2) NULL,
         id_currency   INT NULL,
-        id_user       BINARY(16)            NULL,
         is_deleted    BIT(1) NULL,
-        CONSTRAINT fk_currency FOREIGN KEY (id_currency) REFERENCES tbl_currency(id),
-        CONSTRAINT fk_user FOREIGN KEY (id_user) REFERENCES tbl_user(id)
+        CONSTRAINT fk_currency FOREIGN KEY (id_currency) REFERENCES tbl_currency(id)
 );
 -- CREATE TABLE tbl_student_point
 -- (
@@ -52,13 +50,12 @@ VALUES
     ('admin', NOW(), NOW(), 'admin', 'USD', 0),
     ('admin', NOW(), NOW(), 'admin', 'EUR', 0),
     ('admin', NOW(), NOW(), 'admin', 'VND', 0);
-SET @vi_tran_id = (SELECT id FROM tbl_user WHERE full_name = 'Vi trần');
 
-INSERT INTO tbl_points (created_by, created_date, modified_date, modified_by, name, points, price, id_currency, id_user, is_deleted)
+INSERT INTO tbl_points (created_by, created_date, modified_date, modified_by, name, points, price, id_currency, is_deleted)
 VALUES
-    ('admin', NOW(), NOW(), 'admin', 'Points Package A', 100, 9.99, 1, @vi_tran_id, 0),
-    ('admin', NOW(), NOW(), 'admin', 'Points Package B', 200, 19.99, 1, @vi_tran_id, 0),
-    ('admin', NOW(), NOW(), 'admin', 'Points Package C', 500, 49.99, 2, @vi_tran_id, 0);
+    ('admin', NOW(), NOW(), 'admin', 'Points Package A', 100, 9.99, 1, 0),
+    ('admin', NOW(), NOW(), 'admin', 'Points Package B', 200, 19.99, 1, 0),
+    ('admin', NOW(), NOW(), 'admin', 'Points Package C', 500, 49.99, 2, 0);
 
 
 -- SET @vi_tran_id = (SELECT id FROM tbl_user WHERE email = 'tieuvi200904@gmail.com');
