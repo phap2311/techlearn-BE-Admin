@@ -13,7 +13,7 @@ import java.util.UUID;
 @Service
 public interface UserService {
 
-    UserResponseDTO getUserById(UUID id);
+    UserResponseDTO2 getUserById(UUID id);
 
     UserResponseDTO addUser(UserRequestDTO request);
 
@@ -25,6 +25,7 @@ public interface UserService {
 
     UserResponseDTO2 createUser(UserRequestDTO2 request);
 
-//    UserResponseDTO2 updateUserDTO(UUID id, UserRequestDTO2 request);
+    UserResponseDTO2 updateUserDTO(UUID id, UserRequestDTO2 request);
 
+    void deleteUserById(UUID id);
 }

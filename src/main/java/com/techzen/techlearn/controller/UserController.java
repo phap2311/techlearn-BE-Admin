@@ -40,14 +40,14 @@ public class UserController {
         return JsonResponse.ok(userService.createUser(request));
     }
 
-//    @PutMapping("/{id}")
-//    public ResponseEntity<?> updateUser(@PathVariable UUID id, @RequestBody @Valid UserRequestDTO2 request) {
-//        return JsonResponse.ok(userService.updateUserDTO(id, request));
-//    }
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateUser(@PathVariable UUID id, @RequestBody @Valid UserRequestDTO2 request) {
+        return JsonResponse.ok(userService.updateUserDTO(id, request));
+    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable UUID id) {
-        userService.deleteUser(id);
+        userService.deleteUserById(id);
         return JsonResponse.deleted();
     }
 

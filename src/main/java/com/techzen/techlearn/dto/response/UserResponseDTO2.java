@@ -25,8 +25,6 @@ public class UserResponseDTO2 implements Serializable {
 
     String email;
 
-    String password;
-
     String avatar;
 
     List<RoleType> roles;

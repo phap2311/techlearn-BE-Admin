@@ -49,9 +49,9 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public UserResponseDTO getUserById(UUID id) {
+    public UserResponseDTO2 getUserById(UUID id) {
         UserEntity user = userRepository.findUserById(id).orElseThrow(() -> new ApiException(ErrorCode.USER_NOT_FOUND));
-        return userMapper.toUserResponseDTO(user);
+        return userMapper.toUserResponseDTO2(user);
     }
 
     @Override
@@ -98,13 +98,7 @@ public class UserServiceImpl implements UserService {
 
         List<RoleType> roles = request.getRoles();
         if (roles != null && !roles.isEmpty()) {
-            Set<Role> roleSet = new LinkedHashSet<>();
-            for (RoleType roleType : roles) {
-                Role role = roleRepository.findByName(roleType)
-                        .orElseThrow(() -> new ApiException(ErrorCode.ROLE_NOT_FOUND));
-                roleSet.add(role);
-            }
-            user.setRoles(roleSet);
+            mapRolesToUser(user, roles);
         }
 
         user.setIsDeleted(false);
@@ -126,13 +120,113 @@ public class UserServiceImpl implements UserService {
     }
 
 
-//
-//    @Override
-//    public UserResponseDTO2 updateUserDTO(UUID id, UserRequestDTO2 request) {
-//        userRepository.findById(id).orElseThrow(() -> new ApiException(ErrorCode.USER_NOT_FOUND));
-//        var userMap = userMapper.toUserDTO2Entity(request);
-//        userMap.setId(id);
-//        userMap.setIsDeleted(false);
-//        return userMapper.toUserResponseDTO2(userRepository.save(userMap));
-//    }
+    @Override
+    public UserResponseDTO2 updateUserDTO(UUID id, UserRequestDTO2 request) {
+        UserEntity existingUser = userRepository.findById(id)
+                .orElseThrow(() -> new ApiException(ErrorCode.USER_NOT_FOUND));
+
+        var userMap = userMapper.toUserDTO2Entity(request);
+        userMap.setId(id);
+        userMap.setIsDeleted(false);
+
+        List<RoleType> roles = request.getRoles();
+        if (roles != null && !roles.isEmpty()) {
+            mapRolesToUser(userMap, roles);
+
+            if (roles.contains(RoleType.TEACHER)) {
+                MentorEntity mentorEntity = mentorRepository.findMentorEntityById(userMap.getId());
+                if (mentorEntity != null) {
+                    mentorEntity.setIsDeleted(true);
+//                    mentorRepository.delete(mentorEntity);
+                    mentorRepository.save(mentorEntity);
+                }
+
+                TeacherEntity teacherEntity = teacherMapper.toTeacherEntity(userMap);
+                teacherEntity.setIsDeleted(false);
+                teacherRepository.save(teacherEntity);
+
+            } else if (roles.contains(RoleType.MENTOR)) {
+                TeacherEntity teacherEntity = teacherRepository.findTeacherEntityById(userMap.getId());
+                if (teacherEntity != null) {
+                    teacherEntity.setIsDeleted(true);
+//                    teacherRepository.delete(teacherEntity);
+                    teacherRepository.save(teacherEntity);
+                }
+
+                MentorEntity mentorEntity = mentorMapper.toMentorEntity(userMap);
+                mentorEntity.setIsDeleted(false);
+                mentorRepository.save(mentorEntity);
+
+            } else {
+                MentorEntity mentorEntity = mentorRepository.findMentorEntityById(userMap.getId());
+                if (mentorEntity != null && !roles.contains(RoleType.MENTOR)) {
+                    mentorEntity.setIsDeleted(true);
+//                    mentorRepository.delete(mentorEntity);
+                    mentorRepository.save(mentorEntity);
+                }
+
+                TeacherEntity teacherEntity = teacherRepository.findByUser(existingUser);
+                if (teacherEntity != null && !roles.contains(RoleType.TEACHER)) {
+                    teacherEntity.setIsDeleted(true);
+//                    teacherRepository.delete(teacherEntity);
+                    teacherRepository.save(teacherEntity);
+                }
+            }
+
+        } else {
+            userMap.setRoles(existingUser.getRoles());
+
+            if (existingUser.getRoles().stream().anyMatch(role -> role.getName() == RoleType.MENTOR)) {
+                MentorEntity mentorEntity = mentorRepository.findMentorEntityById(userMap.getId());
+                if (mentorEntity != null) {
+                    mentorEntity = mentorMapper.toMentorEntity(userMap);
+                    mentorEntity.setIsDeleted(false);
+                    mentorRepository.save(mentorEntity);
+                }
+            } else if (existingUser.getRoles().stream().anyMatch(role -> role.getName() == RoleType.TEACHER)) {
+                TeacherEntity teacherEntity = teacherRepository.findTeacherEntityById(userMap.getId());
+                if (teacherEntity != null) {
+                    teacherEntity = teacherMapper.toTeacherEntity(userMap);
+                    teacherEntity.setIsDeleted(false);
+                    teacherRepository.save(teacherEntity);
+                }
+            }
+        }
+
+        return userMapper.toUserResponseDTO2(userRepository.save(userMap));
+    }
+
+    @Override
+    public void deleteUserById(UUID id) {
+        var user = userRepository.findById(id).orElseThrow(() -> new ApiException(ErrorCode.USER_NOT_FOUND));
+        user.setIsDeleted(true);
+
+        if (user.getRoles().stream().anyMatch(role -> role.getName().equals(RoleType.MENTOR))) {
+            MentorEntity mentor = mentorRepository.findMentorEntityById(user.getId());
+            if (mentor != null) {
+                mentor.setIsDeleted(true);
+                mentorRepository.save(mentor);
+            }
+        } else if (user.getRoles().stream().anyMatch(role -> role.getName().equals(RoleType.TEACHER))){
+            TeacherEntity teacher = teacherRepository.findTeacherEntityById(user.getId());
+            if (teacher != null){
+                teacher.setIsDeleted(true);
+                teacherRepository.save(teacher);
+            }
+        }
+        userRepository.save(user);
+    }
+
+
+    private void mapRolesToUser(UserEntity userMap, List<RoleType> roles) {
+        Set<Role> roleSet = new LinkedHashSet<>();
+        for (RoleType roleType : roles) {
+            Role role = roleRepository.findByName(roleType)
+                    .orElseThrow(() -> new ApiException(ErrorCode.ROLE_NOT_FOUND));
+            roleSet.add(role);
+        }
+        userMap.setRoles(roleSet);
+    }
+
+
 }
