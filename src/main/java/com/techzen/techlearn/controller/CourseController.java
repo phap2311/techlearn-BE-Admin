@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -51,13 +52,16 @@ public class CourseController {
     }
 
     @PostMapping
-    public ResponseEntity<?> addCourse(@RequestBody @Valid CourseRequestDTO request) {
-        return JsonResponse.ok(courseService.addCourse(request));
+    public ResponseEntity<?> addCourse(@RequestParam(value = "file", required = false) MultipartFile multipartFile,
+                                       @ModelAttribute @Valid CourseRequestDTO request) {
+        return JsonResponse.ok(courseService.addCourse(request, multipartFile));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateCourse(@PathVariable Long id, @RequestBody @Valid CourseRequestDTO request) {
-        return JsonResponse.ok(courseService.updateCourse(id, request));
+    public ResponseEntity<?> updateCourse(@PathVariable Long id,
+                                          @RequestParam(value = "file", required = false) MultipartFile file,
+                                          @ModelAttribute @Valid CourseRequestDTO request) {
+        return JsonResponse.ok(courseService.updateCourse(id, request, file));
     }
 
     @DeleteMapping("/{id}")
