@@ -28,8 +28,4 @@ public class PointEntity extends BaseEntity{
     @ManyToOne
     @JoinColumn(name = "id_currency", referencedColumnName = "id")
     CurrencyEntity currency;
-
-    @ManyToOne
-    @JoinColumn(name = "id_user", referencedColumnName = "id")
-    UserEntity user;
 }
