@@ -1,12 +1,23 @@
 package com.techzen.techlearn.service.impl;
 
 import com.techzen.techlearn.dto.request.UserRequestDTO;
+import com.techzen.techlearn.dto.request.UserRequestDTO2;
 import com.techzen.techlearn.dto.response.PageResponse;
 import com.techzen.techlearn.dto.response.UserResponseDTO;
+import com.techzen.techlearn.dto.response.UserResponseDTO2;
+import com.techzen.techlearn.entity.MentorEntity;
+import com.techzen.techlearn.entity.Role;
+import com.techzen.techlearn.entity.TeacherEntity;
 import com.techzen.techlearn.entity.UserEntity;
 import com.techzen.techlearn.enums.ErrorCode;
+import com.techzen.techlearn.enums.RoleType;
 import com.techzen.techlearn.exception.ApiException;
+import com.techzen.techlearn.mapper.MentorMapper;
+import com.techzen.techlearn.mapper.TeacherMapper;
 import com.techzen.techlearn.mapper.UserMapper;
+import com.techzen.techlearn.repository.MentorRepository;
+import com.techzen.techlearn.repository.RoleRepository;
+import com.techzen.techlearn.repository.TeacherRepository;
 import com.techzen.techlearn.repository.UserRepository;
 import com.techzen.techlearn.service.UserService;
 import lombok.AccessLevel;
@@ -17,7 +28,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -28,6 +41,12 @@ public class UserServiceImpl implements UserService {
 
     UserRepository userRepository;
     UserMapper userMapper;
+    TeacherRepository teacherRepository;
+    MentorRepository mentorRepository;
+    TeacherMapper teacherMapper;
+    MentorMapper mentorMapper;
+    RoleRepository roleRepository;
+
 
     @Override
     public UserResponseDTO getUserById(UUID id) {
@@ -72,4 +91,48 @@ public class UserServiceImpl implements UserService {
                 .items(list)
                 .build();
     }
+
+    @Override
+    public UserResponseDTO2 createUser(UserRequestDTO2 request) {
+        UserEntity user = userMapper.toUserDTO2Entity(request);
+
+        List<RoleType> roles = request.getRoles();
+        if (roles != null && !roles.isEmpty()) {
+            Set<Role> roleSet = new LinkedHashSet<>();
+            for (RoleType roleType : roles) {
+                Role role = roleRepository.findByName(roleType)
+                        .orElseThrow(() -> new ApiException(ErrorCode.ROLE_NOT_FOUND));
+                roleSet.add(role);
+            }
+            user.setRoles(roleSet);
+        }
+
+        user.setIsDeleted(false);
+        user = userRepository.save(user);
+
+        for (Role role : user.getRoles()) {
+            if (role.getName() == RoleType.TEACHER) {
+                TeacherEntity teacher = teacherMapper.toTeacherEntity(user);
+                teacher.setIsDeleted(false);
+                teacherRepository.save(teacher);
+            } else if (role.getName() == RoleType.MENTOR) {
+                MentorEntity mentor = mentorMapper.toMentorEntity(user);
+                mentor.setIsDeleted(false);
+                mentorRepository.save(mentor);
+            }
+        }
+
+        return userMapper.toUserResponseDTO2(user);
+    }
+
+
+//
+//    @Override
+//    public UserResponseDTO2 updateUserDTO(UUID id, UserRequestDTO2 request) {
+//        userRepository.findById(id).orElseThrow(() -> new ApiException(ErrorCode.USER_NOT_FOUND));
+//        var userMap = userMapper.toUserDTO2Entity(request);
+//        userMap.setId(id);
+//        userMap.setIsDeleted(false);
+//        return userMapper.toUserResponseDTO2(userRepository.save(userMap));
+//    }
 }
