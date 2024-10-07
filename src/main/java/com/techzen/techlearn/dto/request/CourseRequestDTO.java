@@ -11,6 +11,7 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -21,8 +22,10 @@ public class CourseRequestDTO {
     String name;
     @NotBlank(message = "COURSE_PRICE_INVALID")
     String price;
-    @NotBlank(message = "COURSE_POINT_INVALID")
-    String point;
+    @NotBlank(message = "COURSE_PRIVATE_POINT_INVALID")
+    String privatePoint;
+    @NotBlank(message = "COURSE_PUBLIC_POINT_INVALID")
+    String publicPoint;
     @NotBlank(message = "COURSE_DESCRIPTION_INVALID")
     String description;
     @NotBlank(message = "COURSE_UNIT_INVALID")
@@ -34,5 +37,5 @@ public class CourseRequestDTO {
     @NotNull(message = "COURSE_TECHSTACK_INVALID")
     List<String> techStack;
     @NotNull(message = "TEACHER_INVALID")
-    List<TeacherEntity> teacher;
+    List<UUID> teacher;
 }
