@@ -31,6 +31,12 @@ public class CourseController {
         return JsonResponse.ok(courseService.getAllCourse(page, pageSize));
     }
 
+    @GetMapping("/user")
+    public ResponseEntity<?> getAllCourseForUser(@RequestParam(required = false, defaultValue = "1") int page,
+                                                 @RequestParam(required = false, defaultValue = "10") int pageSize) {
+        return JsonResponse.ok(courseService.getAllCourseForUser(page, pageSize));
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<?> getCourseById(@PathVariable Long id) {
         return JsonResponse.ok(courseService.getCourseById(id));
