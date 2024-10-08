@@ -22,4 +22,6 @@ public interface CourseService {
     void deleteCourse(Long id);
 
     List<CourseResponseDTO> getCourseByListId(List<Long> id);
+
+    PageResponse<?> getAllCourseForUser(int page, int pageSize);
 }
