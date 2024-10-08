@@ -3,14 +3,12 @@ package com.techzen.techlearn.service.impl;
 import com.techzen.techlearn.dto.request.CourseRequestDTO;
 import com.techzen.techlearn.dto.response.CourseResponseDTO;
 import com.techzen.techlearn.dto.response.PageResponse;
-import com.techzen.techlearn.dto.response.TeacherResponseDTO;
 import com.techzen.techlearn.entity.CourseEntity;
 import com.techzen.techlearn.entity.TeacherEntity;
 import com.techzen.techlearn.entity.TechStackEntity;
 import com.techzen.techlearn.enums.ErrorCode;
 import com.techzen.techlearn.exception.ApiException;
 import com.techzen.techlearn.mapper.CourseMapper;
-import com.techzen.techlearn.mapper.TeacherMapper;
 import com.techzen.techlearn.repository.CourseRepository;
 import com.techzen.techlearn.repository.TeacherRepository;
 import com.techzen.techlearn.repository.TechStackRepository;
@@ -107,6 +105,20 @@ public class CourseServiceImpl implements CourseService {
         }
         return courses.stream().map(courseMapper::toCourseResponseDTO)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public PageResponse<?> getAllCourseForUser(int page, int pageSize) {
+        Pageable pageable = PageRequest.of(page > 0 ? page - 1 : 0, pageSize);
+        Page<CourseEntity> course = courseRepository.findAllActiveCourses(pageable);
+        List<CourseResponseDTO> list = course.map(courseMapper::toCourseResponseDTO)
+                .stream().collect(Collectors.toList());
+        return PageResponse.builder()
+                .page(page)
+                .pageSize(pageSize)
+                .totalPage(course.getTotalPages())
+                .items(list)
+                .build();
     }
 
     private List<TechStackEntity> getTechStackEntities(CourseRequestDTO requestDTO, CourseEntity course) {
