@@ -9,14 +9,10 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface PointMapper {
-
-
     @Mapping(source = "idCurrency", target = "currency.id")
-    @Mapping(source = "idUser", target = "user.id")
     PointEntity toPointEntity(PointRequestDTO dto);
 
     @Mapping(source = "currency.id", target = "idCurrency")
-    @Mapping(source = "user.id", target = "idUser")
     PointResponseDTO toPointResponseDTO(PointEntity point);
 
     default Integer mapCurrencyToId(CurrencyEntity currency) {

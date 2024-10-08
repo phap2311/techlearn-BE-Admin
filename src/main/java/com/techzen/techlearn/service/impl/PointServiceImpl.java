@@ -22,10 +22,10 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
 public class PointServiceImpl implements PointService {
-    final PointRepository pointRepository;
-    final PointMapper pointMapper;
+    PointRepository pointRepository;
+    PointMapper pointMapper;
     @Override
     public PointResponseDTO createPoints(PointRequestDTO requestDTO) {
         PointEntity point = pointMapper.toPointEntity(requestDTO);
@@ -59,7 +59,6 @@ public class PointServiceImpl implements PointService {
         point.setPrice(newPoint.getPrice());
         point.setPoints(newPoint.getPoints());
         point.setCurrency(newPoint.getCurrency());
-        point.setUser(newPoint.getUser());
         return pointMapper.toPointResponseDTO(pointRepository.save(point));
     }
 
