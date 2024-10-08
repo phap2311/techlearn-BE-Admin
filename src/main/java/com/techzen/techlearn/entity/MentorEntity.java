@@ -42,4 +42,7 @@ public class MentorEntity extends BaseEntity{
     )
     private List<ChapterEntity> chapterEntities;
 
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
 }

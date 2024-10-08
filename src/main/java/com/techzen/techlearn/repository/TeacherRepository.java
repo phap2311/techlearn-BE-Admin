@@ -1,6 +1,7 @@
 package com.techzen.techlearn.repository;
 
 import com.techzen.techlearn.entity.TeacherEntity;
+import com.techzen.techlearn.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -13,4 +14,9 @@ public interface TeacherRepository extends JpaRepository<TeacherEntity, UUID> {
     Optional<TeacherEntity> findTeacherById(UUID id);
 
     Optional<List<TeacherEntity>> findTeacherByCoursesId(Long id);
+
+    TeacherEntity findByUser(UserEntity existingUser);
+
+    @Query("select m from TeacherEntity m where m.id = :id")
+    TeacherEntity findTeacherEntityById(UUID id);
 }
