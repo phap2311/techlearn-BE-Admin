@@ -32,8 +32,6 @@ public class TeacherEntity extends BaseEntity {
     @Column(name = "is_deleted")
     private Boolean isDeleted;
 
-    private String email;
-
     @ManyToMany
     @JoinTable(
             name = "tbl_course_teacher",

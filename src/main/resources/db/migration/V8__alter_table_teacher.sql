@@ -1,2 +1,0 @@
-ALTER TABLE tbl_teacher
-ADD COLUMN email VARCHAR(255) NULL;
