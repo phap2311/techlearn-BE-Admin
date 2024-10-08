@@ -40,6 +40,11 @@ public class TeacherEntity extends BaseEntity {
     )
     private List<CourseEntity> courses;
 
+    @Column(name = "email")
+    private String email;
 
+    @OneToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private UserEntity user;
 
 }

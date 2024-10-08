@@ -1,6 +1,5 @@
 package com.techzen.techlearn.dto.response;
 
-import com.techzen.techlearn.entity.TeacherEntity;
 import com.techzen.techlearn.enums.CurrencyUnit;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -20,11 +19,11 @@ public class CourseResponseDTO {
     String name;
     BigDecimal price;
     String thumbnailUrl;
-    Integer point;
+    Integer privatePoint;
+    Integer publicPoint;
     String description;
     CurrencyUnit currencyUnit;
     Boolean isActive;
-    Boolean isPublic;
     List<TechStackResponseDTO> techStack;
     List<TeacherResponseDTO> teacher;
 }

@@ -13,6 +13,8 @@ import java.util.UUID;
 public interface MentorService {
     PageResponse<?> findAll(int page, int pageSize);
 
+    List<MentorResponseDTO> findAllMentors();
+
     MentorResponseDTO getMentorById(UUID id);
 
     MentorResponseDTO addMentor(MentorRequestDTO request);
@@ -23,9 +25,9 @@ public interface MentorService {
 
     MentorResponseDTO addMentorToChapter(UUID uuid, Long id);
 
+    List<MentorResponseDTO> addMentorToAllChapter(UUID mentorId, List<Long> chapterIds);
+
     MentorResponseDTO updateMentorToChapter(UUID uuid, Long id, MentorChapterRequestDTO request);
 
     void deleteMentorToChapter(UUID uuid, Long id);
-
-    List<MentorResponseDTO> getAll();
 }
