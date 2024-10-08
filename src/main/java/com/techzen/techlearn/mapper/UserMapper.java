@@ -28,7 +28,7 @@ public interface UserMapper {
     @Mapping(source = "roles", target = "roles", qualifiedByName = "roleTypesToRoles")
     UserEntity toUserDTO2Entity(UserRequestDTO2 userRequestDTO);
 
-    @Mapping(source = "roles", target = "roles", qualifiedByName = "rolesToRoleTypes")
+    @Mapping(source = "roles", target = "roles")
     UserResponseDTO2 toUserResponseDTO2(UserEntity userEntity);
 
     @Named("roleTypesToRoles")

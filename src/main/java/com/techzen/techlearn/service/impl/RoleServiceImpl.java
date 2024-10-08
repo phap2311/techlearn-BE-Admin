@@ -26,7 +26,7 @@ public class RoleServiceImpl implements RoleService {
 
     private RoleResponseDTO convertToDTO(Role role) {
         return RoleResponseDTO.builder()
-                .id(String.valueOf(role.getId()))
+                .id(role.getId())
                 .name(role.getName().name())
                 .build();
     }

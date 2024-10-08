@@ -43,7 +43,8 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateUser(@PathVariable UUID id, @RequestBody @Valid UserRequestDTO2 request) {
+    public ResponseEntity<?> updateUser(@PathVariable UUID id, @RequestParam(value = "avatar", required = false) MultipartFile multipartFile,
+                                        @ModelAttribute @Valid UserRequestDTO2 request) {
         return JsonResponse.ok(userService.updateUserDTO(id, request));
     }
 

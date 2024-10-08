@@ -26,8 +26,6 @@ public class UserRequestDTO2 {
 
     String password;
 
-    String avatar;
-
     List<RoleType> roles;
 
 }

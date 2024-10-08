@@ -27,5 +27,5 @@ public class UserResponseDTO2 implements Serializable {
 
     String avatar;
 
-    List<RoleType> roles;
+    List<Role> roles;
 }

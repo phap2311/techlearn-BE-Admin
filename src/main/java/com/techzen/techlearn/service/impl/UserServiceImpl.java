@@ -49,7 +49,6 @@ public class UserServiceImpl implements UserService {
     MentorMapper mentorMapper;
     RoleRepository roleRepository;
     ImageService imageService;
-
     @Override
     public UserResponseDTO2 getUserById(UUID id) {
         UserEntity user = userRepository.findUserById(id).orElseThrow(() -> new ApiException(ErrorCode.USER_NOT_FOUND));
@@ -97,9 +96,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponseDTO2 createUser(UserRequestDTO2 request, MultipartFile multipartFile) {
         UserEntity user = userMapper.toUserDTO2Entity(request);
-        if (multipartFile != null && !multipartFile.isEmpty()) {
+
             user.setAvatar(imageService.upload(multipartFile));
-        }
+
         List<RoleType> roles = request.getRoles();
         if (roles != null && !roles.isEmpty()) {
             mapRolesToUser(user, roles);
@@ -128,7 +127,6 @@ public class UserServiceImpl implements UserService {
     public UserResponseDTO2 updateUserDTO(UUID id, UserRequestDTO2 request) {
         UserEntity existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new ApiException(ErrorCode.USER_NOT_FOUND));
-
         var userMap = userMapper.toUserDTO2Entity(request);
         userMap.setId(id);
         userMap.setIsDeleted(false);
