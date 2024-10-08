@@ -19,6 +19,7 @@ import com.techzen.techlearn.repository.MentorRepository;
 import com.techzen.techlearn.repository.RoleRepository;
 import com.techzen.techlearn.repository.TeacherRepository;
 import com.techzen.techlearn.repository.UserRepository;
+import com.techzen.techlearn.service.ImageService;
 import com.techzen.techlearn.service.UserService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -46,7 +48,7 @@ public class UserServiceImpl implements UserService {
     TeacherMapper teacherMapper;
     MentorMapper mentorMapper;
     RoleRepository roleRepository;
-
+    ImageService imageService;
 
     @Override
     public UserResponseDTO2 getUserById(UUID id) {
@@ -83,7 +85,7 @@ public class UserServiceImpl implements UserService {
 
         Pageable pageable = PageRequest.of(page > 0 ? page - 1 : 0, pageSize);
         Page<UserEntity> users = userRepository.findAll(pageable);
-        List<UserResponseDTO> list = users.map(userMapper::toUserResponseDTO).stream().collect(Collectors.toList());
+        List<UserResponseDTO2> list = users.map(userMapper::toUserResponseDTO2).stream().collect(Collectors.toList());
         return PageResponse.builder()
                 .page(page)
                 .pageSize(pageSize)
@@ -93,9 +95,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponseDTO2 createUser(UserRequestDTO2 request) {
+    public UserResponseDTO2 createUser(UserRequestDTO2 request, MultipartFile multipartFile) {
         UserEntity user = userMapper.toUserDTO2Entity(request);
-
+        if (multipartFile != null && !multipartFile.isEmpty()) {
+            user.setAvatar(imageService.upload(multipartFile));
+        }
         List<RoleType> roles = request.getRoles();
         if (roles != null && !roles.isEmpty()) {
             mapRolesToUser(user, roles);

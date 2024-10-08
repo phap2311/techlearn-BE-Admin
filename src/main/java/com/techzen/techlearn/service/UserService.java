@@ -7,6 +7,7 @@ import com.techzen.techlearn.dto.response.UserResponseDTO;
 import com.techzen.techlearn.dto.response.UserResponseDTO2;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.UUID;
 
@@ -23,7 +24,7 @@ public interface UserService {
 
     PageResponse<?> getAllUser(int page, int pageSize);
 
-    UserResponseDTO2 createUser(UserRequestDTO2 request);
+    UserResponseDTO2 createUser(UserRequestDTO2 request, MultipartFile multipartFile);
 
     UserResponseDTO2 updateUserDTO(UUID id, UserRequestDTO2 request);
 
