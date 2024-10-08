@@ -30,6 +30,8 @@ public enum ErrorCode {
     FULL_NAME_INVALID(1105, "Full name must be not blank", HttpStatus.BAD_REQUEST),
     AGE_INVALID(1106, "Your age must be at least {min}", HttpStatus.BAD_REQUEST),
     INVALID_PASSWORD(1107, "Password must be at least {min} characters", HttpStatus.BAD_REQUEST),
+    EMAIL_INVALID(1108,"Email must be not blank",HttpStatus.BAD_REQUEST),
+    ROLE_NOT_FOUND(1109, "Role not found", HttpStatus.BAD_REQUEST),
 
     // prompt code prompt : 120*
     PROMPT_STRUCTURE(1201, "Prompt structure must be not blank", HttpStatus.BAD_REQUEST),
@@ -65,7 +67,7 @@ public enum ErrorCode {
     COURSE_NAME_INVALID(170002, "Course name must be not blank", HttpStatus.NOT_FOUND),
     COURSE_PRICE_INVALID(170003, "Course price must be not blank", HttpStatus.NOT_FOUND),
     COURSE_THUMBNAIL_URL_INVALID(170004, "Course thumbnail url must be not blank", HttpStatus.NOT_FOUND),
-    COURSE_PRIVATE_POINT_INVALID(170005, "Course private point must be not blank", HttpStatus.NOT_FOUND),
+    COURSE_POINT_INVALID(170005, "Course point must be not blank", HttpStatus.NOT_FOUND),
     COURSE_DESCRIPTION_INVALID(170006, "Course description must be not blank", HttpStatus.NOT_FOUND),
     COURSE_UNIT_INVALID(170007, "Course currency unit must be not blank", HttpStatus.NOT_FOUND),
     COURSE_IS_ACTIVE_INVALID(170008, "Course is active must be not blank", HttpStatus.NOT_FOUND),
@@ -74,7 +76,6 @@ public enum ErrorCode {
     COURSE_IS_ACTIVE_INVALID_TYPE(170011, "The course is active must be false or true", HttpStatus.NOT_FOUND),
     COURSE_IS_PUBLIC_INVALID_TYPE(170012, "The course is public must be false or true", HttpStatus.NOT_FOUND),
     COURSE_TECHSTACK_INVALID(170013, "Course is tech stack must be not null", HttpStatus.NOT_FOUND),
-    COURSE_PUBLIC_POINT_INVALID(170014, "Course public point must be not blank", HttpStatus.NOT_FOUND),
 
     // Error code for chapter: 1800**
     CHAPTER_NOT_EXISTED(180001, "Chapter not existed", HttpStatus.NOT_FOUND),
@@ -101,7 +102,9 @@ public enum ErrorCode {
     TECHSTACK_NOT_EXISTED(200001, "Tech stack not existed", HttpStatus.NOT_FOUND),
 
     // error code point
-    POINT_NOT_FOUND(10404, "Point not found", HttpStatus.BAD_REQUEST);;
+    POINT_NOT_FOUND(10404, "Point not found", HttpStatus.BAD_REQUEST);
+
+    ;
     Integer code;
     String message;
     HttpStatusCode statusCode;

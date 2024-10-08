@@ -46,6 +46,17 @@ public class MentorServiceImpl implements MentorService {
     }
 
     @Override
+    public List<MentorResponseDTO> findAllMentors() {
+        List<MentorEntity> mentors = mentorRepository.findAll();
+        if (mentors.isEmpty()) {
+            throw new ApiException(ErrorCode.MENTOR_NOT_EXISTED);
+        }
+        return mentors.stream()
+                .map(mentorMapper::toMentorResponseDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public MentorResponseDTO getMentorById(UUID id) {
         MentorEntity mentorEntity = mentorRepository.findMentorById(id).orElseThrow(
                 () -> new ApiException(ErrorCode.MENTOR_NOT_EXISTED)
@@ -95,6 +106,23 @@ public class MentorServiceImpl implements MentorService {
         mentor.getChapterEntities().add(chapter);
         MentorEntity updatedMentor = mentorRepository.save(mentor);
         return mentorMapper.toMentorResponseDto(updatedMentor);
+    }
+
+    @Override
+    public List<MentorResponseDTO> addMentorToAllChapter(UUID mentorId, List<Long> chapterIds) {
+        MentorEntity mentor = mentorRepository.findById(mentorId)
+                .orElseThrow(() -> new ApiException(ErrorCode.MENTOR_NOT_EXISTED));
+        List<ChapterEntity> chapters = chapterRepository.findAllById(chapterIds);
+        if (chapters.size() != chapterIds.size()) {
+            throw new ApiException(ErrorCode.CHAPTER_NOT_EXISTED);
+        }
+        for (ChapterEntity chapter : chapters) {
+            mentor.getChapterEntities().add(chapter);
+        }
+        MentorEntity updatedMentor = mentorRepository.save(mentor);
+        return updatedMentor.getChapterEntities().stream()
+                .map(chapter -> mentorMapper.toMentorResponseDto(updatedMentor))
+                .collect(Collectors.toList());
     }
 
     @Override

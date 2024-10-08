@@ -1,6 +1,7 @@
 package com.techzen.techlearn.controller;
 
 import com.techzen.techlearn.dto.request.UserRequestDTO;
+import com.techzen.techlearn.dto.request.UserRequestDTO2;
 import com.techzen.techlearn.dto.response.ApiResponse;
 import com.techzen.techlearn.enums.ErrorCode;
 import com.techzen.techlearn.service.UserService;
@@ -35,18 +36,18 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<?> addUser(@RequestBody @Valid UserRequestDTO request) {
-        return JsonResponse.ok(userService.addUser(request));
+    public ResponseEntity<?> addUser(@RequestBody @Valid UserRequestDTO2 request) {
+        return JsonResponse.ok(userService.createUser(request));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateUser(@PathVariable UUID id, @RequestBody @Valid UserRequestDTO request) {
-        return JsonResponse.ok(userService.updateUser(id, request));
+    public ResponseEntity<?> updateUser(@PathVariable UUID id, @RequestBody @Valid UserRequestDTO2 request) {
+        return JsonResponse.ok(userService.updateUserDTO(id, request));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable UUID id) {
-        userService.deleteUser(id);
+        userService.deleteUserById(id);
         return JsonResponse.deleted();
     }
 

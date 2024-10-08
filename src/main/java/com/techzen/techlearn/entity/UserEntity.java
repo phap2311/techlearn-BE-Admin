@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Where;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -28,4 +30,18 @@ public class UserEntity extends BaseEntity{
 
     @Column(name = "is_deleted")
     private Boolean isDeleted;
+
+    @ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @JoinTable(name = "tbl_user_roles",
+            joinColumns=@JoinColumn(name="user", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name="role", referencedColumnName = "id")
+    )
+    Set<Role> roles= new HashSet<>();
+
+    @Column(name = "avatar")
+    String avatar;
+
+    @Column(name = "email")
+    String email;
+
 }

@@ -40,6 +40,13 @@ public class ChapterController {
         return JsonResponse.ok(lessonService.getAssignmentByIdChapter(id));
     }
 
+    @GetMapping("/{idChapter}/lessons")
+    public ResponseEntity<?> getLessonsByIdChapter(@RequestParam(required = false, defaultValue = "1") int page,
+                                                   @RequestParam(required = false, defaultValue = "10") int pageSize,
+                                                   @PathVariable Long idChapter) {
+        return JsonResponse.ok(lessonService.getLessonsByIdChapter(page, pageSize, idChapter));
+    }
+
     @PostMapping
     public ResponseEntity<?> addChapter(@RequestBody @Valid ChapterRequestDTO request) {
         return JsonResponse.ok(chapterService.addChapter(request));
