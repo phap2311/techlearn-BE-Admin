@@ -19,7 +19,7 @@ public class PointController {
 
     @GetMapping
     public ResponseEntity<?> findAll(@RequestParam(required = false, defaultValue = "1") int page,
-                                     @RequestParam(required = false, defaultValue = "10") int pageSize) {
+                                     @RequestParam(required = false, defaultValue = "2") int pageSize) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(pointService.findAllPoints(page, pageSize));
     }

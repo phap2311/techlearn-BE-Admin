@@ -70,7 +70,6 @@ public class CourseServiceImpl implements CourseService {
         return courseMapper.toCourseResponseDTO(courseRepository.save(course));
     }
 
-
     @Override
     public CourseResponseDTO updateCourse(Long id, CourseRequestDTO request, MultipartFile file) {
         var existingCourse = courseRepository.findById(id)
