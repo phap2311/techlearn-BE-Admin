@@ -36,7 +36,7 @@ public class LessonServiceImpl implements LessonService {
     ChapterRepository chapterRepository;
 
     @Override
-    public PageResponse<?> getAllLesson(int page, int pageSize, Long idChapter) {
+    public PageResponse<?> getLessonsByIdChapter(int page, int pageSize, Long idChapter) {
         Pageable pageable = PageRequest.of(page > 0 ? page - 1 : 0, pageSize,
                 Sort.by("lessonOrder"));
         Page<LessonEntity> course = lessonRepository.findAllByChapterId(idChapter, pageable);
@@ -112,5 +112,19 @@ public class LessonServiceImpl implements LessonService {
         return lessonRepository.findAllByType(TypeLesson.EXERCISES)
                 .stream().map(lessonMapper::toLessonResponseDTO)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public PageResponse<?> getAllLesson(int page, int pageSize) {
+        Pageable pageable = PageRequest.of(page > 0 ? page - 1 : 0, pageSize);
+        Page<LessonEntity> course = lessonRepository.findAll(pageable);
+        List<LessonResponseDTO> list = course.map(lessonMapper::toLessonResponseDTO)
+                .stream().collect(Collectors.toList());
+        return PageResponse.builder()
+                .page(page)
+                .pageSize(pageSize)
+                .totalPage(course.getTotalPages())
+                .items(list)
+                .build();
     }
 }
