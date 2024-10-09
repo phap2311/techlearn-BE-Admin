@@ -43,4 +43,5 @@ public interface CourseMapper {
                         .build())
                 .collect(Collectors.toList());
     }
+
 }

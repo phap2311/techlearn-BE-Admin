@@ -10,7 +10,7 @@ import java.util.List;
 
 @Service
 public interface LessonService {
-    PageResponse<?> getAllLesson(int page, int pageSize, Long idChapter);
+    PageResponse<?> getLessonsByIdChapter(int page, int pageSize, Long idChapter);
 
     LessonResponseDTO getLessonById(Long id);
 
@@ -21,4 +21,10 @@ public interface LessonService {
     void deleteLesson(Long id);
 
     void updateOrder(List<OrderDTO> lessonOrderList);
+
+    List<LessonResponseDTO> getAssignmentByIdChapter(Long id);
+
+    List<LessonResponseDTO> getAllAssignment();
+
+    PageResponse<?> getAllLesson(int page, int pageSize);
 }

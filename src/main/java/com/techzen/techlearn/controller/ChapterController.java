@@ -3,6 +3,7 @@ package com.techzen.techlearn.controller;
 import com.techzen.techlearn.dto.request.ChapterRequestDTO;
 import com.techzen.techlearn.dto.request.OrderDTO;
 import com.techzen.techlearn.service.ChapterService;
+import com.techzen.techlearn.service.LessonService;
 import com.techzen.techlearn.util.JsonResponse;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -20,6 +21,7 @@ import java.util.List;
 public class ChapterController {
 
     ChapterService chapterService;
+    LessonService lessonService;
 
     @GetMapping
     public ResponseEntity<?> getAllChapters(@RequestParam(required = false, defaultValue = "1") int page,
@@ -33,6 +35,18 @@ public class ChapterController {
         return JsonResponse.ok(chapterService.getChapterById(id));
     }
 
+    @GetMapping("/{id}/assignment")
+    public ResponseEntity<?> getAssignmentByIdChapter(@PathVariable Long id) {
+        return JsonResponse.ok(lessonService.getAssignmentByIdChapter(id));
+    }
+
+    @GetMapping("/{idChapter}/lessons")
+    public ResponseEntity<?> getLessonsByIdChapter(@RequestParam(required = false, defaultValue = "1") int page,
+                                                   @RequestParam(required = false, defaultValue = "10") int pageSize,
+                                                   @PathVariable Long idChapter) {
+        return JsonResponse.ok(lessonService.getLessonsByIdChapter(page, pageSize, idChapter));
+    }
+
     @PostMapping
     public ResponseEntity<?> addChapter(@RequestBody @Valid ChapterRequestDTO request) {
         return JsonResponse.ok(chapterService.addChapter(request));
@@ -41,6 +55,12 @@ public class ChapterController {
     @PutMapping("/{id}")
     public ResponseEntity<?> updateChapter(@PathVariable Long id, @RequestBody ChapterRequestDTO request) {
         return JsonResponse.ok(chapterService.updateChapter(id, request));
+    }
+
+    @PutMapping
+    public ResponseEntity<?> updateListChapter(@RequestBody ChapterRequestDTO request) {
+        chapterService.updateListChapter(request);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")

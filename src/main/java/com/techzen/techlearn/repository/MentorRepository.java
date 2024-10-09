@@ -1,6 +1,7 @@
 package com.techzen.techlearn.repository;
 
 import com.techzen.techlearn.entity.MentorEntity;
+import com.techzen.techlearn.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -31,4 +32,8 @@ public interface MentorRepository extends JpaRepository<MentorEntity, UUID> {
                              @Param("uuid") UUID uuid,
                              @Param("newMentorId") UUID newMentorId);
 
+    MentorEntity findByUser(UserEntity existingUser);
+
+    @Query("select m from MentorEntity m where m.id = :id")
+    MentorEntity findMentorEntityById(UUID id);
 }

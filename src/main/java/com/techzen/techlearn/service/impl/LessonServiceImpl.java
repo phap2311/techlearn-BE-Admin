@@ -6,6 +6,7 @@ import com.techzen.techlearn.dto.response.LessonResponseDTO;
 import com.techzen.techlearn.dto.response.PageResponse;
 import com.techzen.techlearn.entity.LessonEntity;
 import com.techzen.techlearn.enums.ErrorCode;
+import com.techzen.techlearn.enums.TypeLesson;
 import com.techzen.techlearn.exception.ApiException;
 import com.techzen.techlearn.mapper.LessonMapper;
 import com.techzen.techlearn.repository.ChapterRepository;
@@ -35,7 +36,7 @@ public class LessonServiceImpl implements LessonService {
     ChapterRepository chapterRepository;
 
     @Override
-    public PageResponse<?> getAllLesson(int page, int pageSize, Long idChapter) {
+    public PageResponse<?> getLessonsByIdChapter(int page, int pageSize, Long idChapter) {
         Pageable pageable = PageRequest.of(page > 0 ? page - 1 : 0, pageSize,
                 Sort.by("lessonOrder"));
         Page<LessonEntity> course = lessonRepository.findAllByChapterId(idChapter, pageable);
@@ -62,7 +63,7 @@ public class LessonServiceImpl implements LessonService {
                 .orElseThrow(() -> new ApiException(ErrorCode.CHAPTER_NOT_FOUND));
         var lesson = lessonMapper.toLessonEntity(request);
         var lesson_order = lessonRepository.findMaxOrderByChapterId(Long.parseLong(request.getChapterId()));
-        lesson.setLessonOrder(lesson_order + 1);
+        lesson.setLessonOrder(lesson_order != null? lesson_order + 1 : 1);
         lesson.setIsDeleted(false);
         return lessonMapper.toLessonResponseDTO(lessonRepository.save(lesson));
     }
@@ -97,5 +98,33 @@ public class LessonServiceImpl implements LessonService {
                         .orElseThrow(() -> new ApiException(ErrorCode.LESSON_NOT_EXISTED)))
                 .collect(Collectors.toList());
         lessonRepository.saveAll(lessonsToUpdate);
+    }
+
+    @Override
+    public List<LessonResponseDTO> getAssignmentByIdChapter(Long id) {
+        return lessonRepository.findByChapterId(id)
+                .stream().map(lessonMapper::toLessonResponseDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<LessonResponseDTO> getAllAssignment() {
+        return lessonRepository.findAllByType(TypeLesson.EXERCISES)
+                .stream().map(lessonMapper::toLessonResponseDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public PageResponse<?> getAllLesson(int page, int pageSize) {
+        Pageable pageable = PageRequest.of(page > 0 ? page - 1 : 0, pageSize);
+        Page<LessonEntity> course = lessonRepository.findAll(pageable);
+        List<LessonResponseDTO> list = course.map(lessonMapper::toLessonResponseDTO)
+                .stream().collect(Collectors.toList());
+        return PageResponse.builder()
+                .page(page)
+                .pageSize(pageSize)
+                .totalPage(course.getTotalPages())
+                .items(list)
+                .build();
     }
 }

@@ -30,6 +30,8 @@ public enum ErrorCode {
     FULL_NAME_INVALID(1105, "Full name must be not blank", HttpStatus.BAD_REQUEST),
     AGE_INVALID(1106, "Your age must be at least {min}", HttpStatus.BAD_REQUEST),
     INVALID_PASSWORD(1107, "Password must be at least {min} characters", HttpStatus.BAD_REQUEST),
+    EMAIL_INVALID(1108,"Email must be not blank",HttpStatus.BAD_REQUEST),
+    ROLE_NOT_FOUND(1109, "Role not found", HttpStatus.BAD_REQUEST),
 
     // prompt code prompt : 120*
     PROMPT_STRUCTURE(1201, "Prompt structure must be not blank", HttpStatus.BAD_REQUEST),
@@ -98,6 +100,9 @@ public enum ErrorCode {
 
     // error code techstack: 2000**
     TECHSTACK_NOT_EXISTED(200001, "Tech stack not existed", HttpStatus.NOT_FOUND),
+
+    // error code point
+    POINT_NOT_FOUND(10404, "Point not found", HttpStatus.BAD_REQUEST);
 
     ;
     Integer code;

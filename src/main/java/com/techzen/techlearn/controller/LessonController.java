@@ -23,9 +23,13 @@ public class LessonController {
 
     @GetMapping
     public ResponseEntity<?> getAllLesson(@RequestParam(required = false, defaultValue = "1") int page,
-                                          @RequestParam(required = false, defaultValue = "10") int pageSize,
-                                          @RequestParam Long idChapter) {
-        return JsonResponse.ok(lessonService.getAllLesson(page, pageSize, idChapter));
+                                          @RequestParam(required = false, defaultValue = "10") int pageSize) {
+        return JsonResponse.ok(lessonService.getAllLesson(page, pageSize));
+    }
+
+    @GetMapping("/assignments")
+    public ResponseEntity<?> getAllAssignment() {
+        return JsonResponse.ok(lessonService.getAllAssignment());
     }
 
     @GetMapping("/{id}")

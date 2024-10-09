@@ -4,6 +4,7 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 logs/
+!**/src/main/resources/techlearn-firebase-adminsdk.json
 
 ### STS ###
 .apt_generated
@@ -32,3 +33,4 @@ build/
 
 ### VS Code ###
 .vscode/
+D:\TechZen\techlearn-BE-Admin\src\main\resources\techlearn-firebase-adminsdk.json

@@ -13,6 +13,7 @@ import com.techzen.techlearn.repository.CourseRepository;
 import com.techzen.techlearn.repository.TeacherRepository;
 import com.techzen.techlearn.repository.TechStackRepository;
 import com.techzen.techlearn.service.CourseService;
+import com.techzen.techlearn.service.ImageService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -20,6 +21,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,6 +34,7 @@ public class CourseServiceImpl implements CourseService {
     CourseRepository courseRepository;
     CourseMapper courseMapper;
     TechStackRepository techStackRepository;
+    ImageService imageService;
     TeacherRepository teacherRepository;
 
     @Override
@@ -56,36 +59,33 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public CourseResponseDTO addCourse(CourseRequestDTO request) {
+    public CourseResponseDTO addCourse(CourseRequestDTO request, MultipartFile file) {
         var course = courseMapper.toCourseEntity(request);
         course.setIsDeleted(false);
-        List<TeacherEntity> teachers = request.getTeacher().stream()
-                .map(teacherDto -> teacherRepository.findById(teacherDto.getId()).orElseThrow(() ->
-                        new ApiException(ErrorCode.TEACHER_NOT_EXISTED)))
-                .collect(Collectors.toList());
-        course.setTeachers(teachers);
+        course.setThumbnailUrl(imageService.upload(file));
+        course.setTeachers(getTeacherEntities(request));
         course.setTechStackEntities(getTechStackEntities(request, course));
         return courseMapper.toCourseResponseDTO(courseRepository.save(course));
     }
 
-
     @Override
-    public CourseResponseDTO updateCourse(Long id, CourseRequestDTO request) {
-        var existingCourse  = courseRepository.findById(id)
+    public CourseResponseDTO updateCourse(Long id, CourseRequestDTO request, MultipartFile file) {
+        var existingCourse = courseRepository.findById(id)
                 .orElseThrow(() -> new ApiException(ErrorCode.COURSE_NOT_EXISTED));
         existingCourse.getTechStackEntities()
                 .forEach(tech -> tech.getCourses().remove(existingCourse));
         existingCourse.getTechStackEntities().clear();
         courseRepository.flush();
-        List<TeacherEntity> teachers = request.getTeacher().stream()
-                .map(teacherDto -> teacherRepository.findById(teacherDto.getId()).orElseThrow(() ->
-                        new ApiException(ErrorCode.TEACHER_NOT_EXISTED)))
-                .collect(Collectors.toList());
         var courseMap = courseMapper.toCourseEntity(request);
         courseMap.setId(id);
         courseMap.setTechStackEntities(getTechStackEntities(request, courseMap));
         courseMap.setIsDeleted(false);
-        courseMap.setTeachers(teachers);
+        courseMap.setTeachers(getTeacherEntities(request));
+        if(file != null){
+            courseMap.setThumbnailUrl(imageService.upload(file));
+        }else {
+            courseMap.setThumbnailUrl(existingCourse.getThumbnailUrl());
+        }
         return courseMapper.toCourseResponseDTO(courseRepository.save(courseMap));
     }
 
@@ -97,11 +97,42 @@ public class CourseServiceImpl implements CourseService {
         courseRepository.save(course);
     }
 
+    @Override
+    public List<CourseResponseDTO> getCourseByListId(List<Long> id) {
+        var courses = courseRepository.findAllById(id);
+        if (courses.isEmpty()) {
+            throw new ApiException(ErrorCode.COURSE_NOT_EXISTED);
+        }
+        return courses.stream().map(courseMapper::toCourseResponseDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public PageResponse<?> getAllCourseForUser(int page, int pageSize) {
+        Pageable pageable = PageRequest.of(page > 0 ? page - 1 : 0, pageSize);
+        Page<CourseEntity> course = courseRepository.findAllActiveCourses(pageable);
+        List<CourseResponseDTO> list = course.map(courseMapper::toCourseResponseDTO)
+                .stream().collect(Collectors.toList());
+        return PageResponse.builder()
+                .page(page)
+                .pageSize(pageSize)
+                .totalPage(course.getTotalPages())
+                .items(list)
+                .build();
+    }
+
     private List<TechStackEntity> getTechStackEntities(CourseRequestDTO requestDTO, CourseEntity course) {
         return requestDTO.getTechStack().stream()
-                .map(id -> techStackRepository.findById(id)
+                .map(id -> techStackRepository.findById(Long.parseLong(id))
                         .orElseThrow(() -> new ApiException(ErrorCode.TECHSTACK_NOT_EXISTED)))
                 .peek(techStack -> techStack.getCourses().add(course))
+                .collect(Collectors.toList());
+    }
+
+    private List<TeacherEntity> getTeacherEntities(CourseRequestDTO requestDTO) {
+        return requestDTO.getTeacher().stream()
+                .map(id -> teacherRepository.findById(id).orElseThrow(() ->
+                        new ApiException(ErrorCode.TEACHER_NOT_EXISTED)))
                 .collect(Collectors.toList());
     }
 }

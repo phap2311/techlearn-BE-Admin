@@ -73,4 +73,11 @@ public class TeacherServiceImpl implements TeacherService {
         teacher.setIsDeleted(true);
         teacherRepository.save(teacher);
     }
+
+    @Override
+    public List<TeacherResponseDTO> getTeacherByIdCourse(Long id) {
+        var teachers = teacherRepository.findTeacherByCoursesId(id)
+                .orElseThrow(() -> new ApiException(ErrorCode.TEACHER_NOT_EXISTED));
+        return teachers.stream().map(teacherMapper::toTeacherResponseDTO).collect(Collectors.toList());
+    }
 }
